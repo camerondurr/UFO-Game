@@ -70,15 +70,10 @@ var UFO = function(canvas, dimensions)
 	maker.identity();
 	maker.translate([0, dimensions.distanceAboveGround + dimensions.heightOfUFO + dimensions.heightOfLabel/2, 0]);
 	maker.rectangle({
-		width: dimensions.widthOfMiddlePart,
+		width: dimensions.diameterOfCockpit,
 		height: dimensions.heightOfLabel
 	});
-	maker.clear({uv: true});
 	this.label = maker.flush();
-	this.label.getShader().setColorMask([0, 0, 0, 1]);
-	var texture = new GLTexture(canvas);
-	texture.text({text: 'Cameron', color: 'white', font: '40px Arial', width: 128, height: 128});
-	this.label.setTexture(texture);
 	
 	this.dimensions = dimensions;
 	
@@ -107,10 +102,6 @@ UFO.prototype.draw = function()
 {
 	this.model.draw();
 	this.label.draw();
-};
-UFO.prototype.setTexture = function(texture)
-{
-	this.model.setTexture(texture);
 };
 UFO.prototype.animate = function()
 {
@@ -184,27 +175,25 @@ UFO.prototype.control = function(isPressed)
 	{
 		this.speed.x -= Math.sin(this.orientation.y)*this.speedIntensity;
 		this.speed.z -= Math.cos(this.orientation.y)*this.speedIntensity;
-		this.orientation.x -= Math.cos(this.orientation.y)*this.spinIntensity;
 	}
 	//// If the down arrow key or 's' key is pressed...
 	if (isPressed[40] || isPressed[83])
 	{
 		this.speed.x += Math.sin(this.orientation.y)*this.speedIntensity;
 		this.speed.z += Math.cos(this.orientation.y)*this.speedIntensity;
-		this.orientation.x += Math.cos(this.orientation.y)*this.spinIntensity;
 	}
 	//// If the 'a' key is pressed...
 	if (isPressed[65])
 	{
 		this.speed.x -= Math.cos(this.orientation.y)*this.speedIntensity;
 		this.speed.z += Math.sin(this.orientation.y)*this.speedIntensity;
-		this.orientation.z += Math.cos(this.orientation.y)*this.spinIntensity;
+		// this.orientation.z += this.speedIntensity;
 	}
 	//// If the 'd' key is pressed...
 	if (isPressed[68])
 	{
 		this.speed.x += Math.cos(this.orientation.y)*this.speedIntensity;
 		this.speed.z -= Math.sin(this.orientation.y)*this.speedIntensity;
-		this.orientation.z -= Math.cos(this.orientation.y)*this.spinIntensity;
+		// this.orientation.z -= this.speedIntensity;
 	}
 };

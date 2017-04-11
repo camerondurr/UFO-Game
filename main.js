@@ -110,7 +110,10 @@ var main = function()
 				printer.rotateX(ufo.orientation.x);
 				printer.rotateY(ufo.orientation.y);
 				printer.rotateZ(ufo.orientation.z);
-				
+
+				var texture = new GLTexture(canvas);
+				texture.text({text: "1", color: 'white', font: '40px Arial', width: 128, height: 128});
+				ufo.label.setTexture(texture);
 				ufo.draw(user.p, user.clr);
 				
 				printer.popMatrix();
