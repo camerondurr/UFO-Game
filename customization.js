@@ -1,0 +1,4 @@
+var customization = function()
+{
+	main();
+};
