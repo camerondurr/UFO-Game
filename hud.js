@@ -1,27 +1,18 @@
-var HUD = function(canvas)
+var HUD = function(area)
 {
-	var maker = new GLObjectMaker(canvas);
-	//// HUD
-	////// Lives
-	var x = 0.52;
-	this.lives = [];
 	for (var i = 0; i < 3; i++)
 	{
-		maker.identity();
-		maker.translate([x, 0.35, -1]);
-		maker.rectangle({width: 0.1, height: 0.1});
-		maker.clear({uv: true});
-		var life = maker.flush();
-		life.getShader().setColorMask([1, 0, 0, 1]);
-		this.lives[i] = life;
-		x += 0.15;
-	}
-};
+		var life = document.createElement("div");
+		var lifeSize = 100;
+		life.style.width = lifeSize + "px";
+		life.style.height = lifeSize + "px";
+		life.style.right = (i + 1)*lifeSize + "px";
+		life.style.top = lifeSize + "px";
+		life.style.position = "absolute";
+		life.style.backgroundColor = "red";
+		life.style.borderRadius = "100%";
+		// TODO: Space out the lives.
 
-HUD.prototype.draw = function()
-{
-	for (var i = 0; i < 3; i++)
-	{
-		this.lives[i].draw();
+		area.appendChild(life);
 	}
 };

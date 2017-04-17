@@ -1,13 +1,14 @@
-var UFO = function(canvas, dimensions)
+var UFO = function(canvas, dimensions, color)
 {
 	var maker = new GLObjectMaker(canvas);
 	
 	// UFO Model
+	this.color = color;
 	maker.identity();
 	maker.translate([0, dimensions.distanceAboveGround, 0]);
 	//// Bottom Part
 	maker.translate([0, dimensions.heightOfBottomPart/2, 0]);
-	maker.color([1, 1, 1]);
+	maker.color(this.color);
 	maker.cylinder({
 		width: dimensions.widthOfBottomPart,
 		depth: dimensions.widthOfBottomPart,
@@ -19,7 +20,7 @@ var UFO = function(canvas, dimensions)
 	maker.translate([0, dimensions.heightOfBottomPart/2, 0]);
 	//// Middle Part
 	maker.translate([0, dimensions.heightOfMiddlePart/2, 0]);
-	maker.color([1, 1, 1]);
+	maker.color(this.color);
 	maker.cylinder({
 		width: dimensions.widthOfMiddlePart,
 		depth: dimensions.widthOfMiddlePart,
@@ -31,7 +32,7 @@ var UFO = function(canvas, dimensions)
 	maker.translate([0, dimensions.heightOfMiddlePart/2, 0]);
 	//// Top Part
 	maker.translate([0, dimensions.heightOfTopPart/2, 0]);
-	maker.color([1, 1, 1]);
+	maker.color(this.color);
 	maker.cylinder({
 		width: dimensions.widthOfMiddlePart,
 		depth: dimensions.widthOfMiddlePart,
@@ -43,7 +44,7 @@ var UFO = function(canvas, dimensions)
 	//// Gun Barrel
 	maker.translate([0, 0, -dimensions.lengthOfGunBarrel/2]);
 	maker.rotateX(-3.14/2);
-	maker.color([1, 1, 1]);
+	maker.color(this.color);
 	maker.cylinder({
 		width: dimensions.widthOfGunBarrel,
 		depth: dimensions.widthOfGunBarrel,
@@ -56,7 +57,7 @@ var UFO = function(canvas, dimensions)
 	maker.translate([0, dimensions.heightOfTopPart/2, dimensions.lengthOfGunBarrel/2]);
 	//// Cockpit
 	maker.translate([0, 0, 0]);
-	maker.color([1, 1, 1]);
+	maker.color(this.color);
 	maker.sphere({
 		width: dimensions.diameterOfCockpit,
 		depth: dimensions.diameterOfCockpit,
@@ -68,7 +69,7 @@ var UFO = function(canvas, dimensions)
 	
 	// Label
 	maker.identity();
-	maker.translate([0, dimensions.distanceAboveGround + dimensions.heightOfUFO + dimensions.heightOfLabel/2, 0]);
+	maker.translate([0, dimensions.distanceAboveGround + dimensions.heightOfUFO + dimensions.heightOfLabel/2, dimensions.widthOfMiddlePart/4]);
 	maker.rectangle({
 		width: dimensions.diameterOfCockpit,
 		height: dimensions.heightOfLabel
@@ -133,7 +134,7 @@ UFO.prototype.animate = function()
 		this.orientation.x = tiltLimit;
 	}
 	// Label Rotation
-	this.label.rotateY(0.005);
+	this.label.rotateY(0.01);
 };
 UFO.prototype.testForCollisions = function(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary)
 {
@@ -175,25 +176,32 @@ UFO.prototype.control = function(isPressed)
 	{
 		this.speed.x -= Math.sin(this.orientation.y)*this.speedIntensity;
 		this.speed.z -= Math.cos(this.orientation.y)*this.speedIntensity;
+		// TODO: Add tilting logic for when the UFO moves forward.
 	}
 	//// If the down arrow key or 's' key is pressed...
 	if (isPressed[40] || isPressed[83])
 	{
 		this.speed.x += Math.sin(this.orientation.y)*this.speedIntensity;
 		this.speed.z += Math.cos(this.orientation.y)*this.speedIntensity;
+		// TODO: Add tilting logic for when the UFO moves backward.
 	}
 	//// If the 'a' key is pressed...
 	if (isPressed[65])
 	{
 		this.speed.x -= Math.cos(this.orientation.y)*this.speedIntensity;
 		this.speed.z += Math.sin(this.orientation.y)*this.speedIntensity;
-		// this.orientation.z += this.speedIntensity;
+		this.orientation.z += this.speedIntensity;
 	}
 	//// If the 'd' key is pressed...
 	if (isPressed[68])
 	{
 		this.speed.x += Math.cos(this.orientation.y)*this.speedIntensity;
 		this.speed.z -= Math.sin(this.orientation.y)*this.speedIntensity;
-		// this.orientation.z -= this.speedIntensity;
+		this.orientation.z -= this.speedIntensity;
 	}
+};
+UFO.prototype.display = function()
+{
+	this.model.rotateY(0.005);
+	this.label.rotateY(-0.0075);
 };
