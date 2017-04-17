@@ -134,29 +134,52 @@ UFO.prototype.animate = function()
 		this.orientation.x = tiltLimit;
 	}
 	// Label Rotation
-	this.label.rotateY(0.01);
+	this.label.rotateY(0.075);
 };
-UFO.prototype.testForCollisions = function(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary)
+UFO.prototype.testForCollisions = function(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary, arena)
 {
 	if (this.position.x < westWallBoundary)
 	{
+		// TODO: Add Thud.
 		this.position.x = westWallBoundary;
 		this.speed.x = 0;
 	}
 	else if (this.position.x > eastWallBoundary)
 	{
+		// TODO: Add Thud.
 		this.position.x = eastWallBoundary;
 		this.speed.x = 0;
 	}
 	if (this.position.z < northWallBoundary)
 	{
+		// TODO: Add Thud.
 		this.position.z = northWallBoundary;
 		this.speed.z = 0;
 	}
 	else if (this.position.z > southWallBoundary)
 	{
+		// TODO: Add Thud.
 		this.position.z = southWallBoundary;
 		this.speed.z = 0;
+	}
+
+	for (var i = 0; i < 15; i++)
+	{
+		if (this.position.x > arena.obstaclesData[i].xLow - this.dimensions.widthOfMiddlePart/2)
+		{
+			if (this.position.x < arena.obstaclesData[i].xHigh + this.dimensions.widthOfMiddlePart/2)
+			{
+				if (this.position.z > arena.obstaclesData[i].zLow - this.dimensions.widthOfMiddlePart/2)
+				{
+					if (this.position.z < arena.obstaclesData[i].zHigh + this.dimensions.widthOfMiddlePart/2)
+					{
+						// TODO: Keep the UFO from passing through the obstacles.
+						this.speed.x = 0;
+						this.speed.z = 0;
+					}
+				}
+			}
+		}
 	}
 };
 UFO.prototype.control = function(isPressed)
@@ -203,5 +226,5 @@ UFO.prototype.control = function(isPressed)
 UFO.prototype.display = function()
 {
 	this.model.rotateY(0.005);
-	this.label.rotateY(-0.0075);
+	this.label.rotateY(0.075);
 };

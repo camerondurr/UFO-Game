@@ -1,4 +1,4 @@
-var Arena = function(canvas, lengthOfBoard)
+var Arena = function(canvas, lengthOfBoard, dimensions)
 {
 	var maker = new GLObjectMaker(canvas);
 	//// Arena
@@ -54,82 +54,54 @@ var Arena = function(canvas, lengthOfBoard)
 		height: heightOfWall,
 		depth: depthOfWall
 	});
+
+	this.obstaclesData = new Array;
 	////// Obstacles
-	//////// Box
-	maker.identity();
-	var randomX = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	var randomZ = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	maker.translate([randomX, 0.5, randomZ]);
-	maker.color([1, 1, 1]);
-	maker.box({
-		width: Math.random() + 1,
-		height: 1,
-		depth: Math.random() + 1
-	});
-	//////// Sphere
-	maker.identity();
-	randomX = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	randomZ = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	maker.translate([randomX, 0.5, randomZ]);
-	maker.color([1, 1, 1]);
-	maker.sphere({
-		width: 1,
-		depth: 1,
-		height: 1,
-		resolution: 32
-	});
-	//////// Cylinder
-	maker.identity();
-	randomX = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	randomZ = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	maker.translate([randomX, 0.5, randomZ]);
-	maker.color([1, 1, 1]);
-	var randomWidth = Math.random() + 1;
-	maker.cylinder({
-		width: randomWidth,
-		depth: randomWidth,
-		height: 1,
-		width2: randomWidth,
-		depth2: randomWidth
-	});
-	//////// Cone
-	maker.identity();
-	randomX = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	randomZ = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	maker.translate([randomX, 0, randomZ]);
-	maker.color([1, 1, 1]);
-	randomWidth = Math.random() + 1;
-	maker.cone({
-		width: randomWidth,
-		height: 1,
-		depth: randomWidth,
-		resolution: 32
-	});
-	//////// Pyramid
-	maker.identity();
-	randomX = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	randomZ = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	maker.translate([randomX, 0, randomZ]);
-	maker.color([1, 1, 1]);
-	randomWidth = Math.random() + 1;
-	maker.pyramid({
-		width: randomWidth,
-		height: 1,
-		depth: randomWidth
-	});
-	//////// Trapezoid
-	maker.identity();
-	randomX = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	randomZ = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-	maker.translate([randomX, 0.5, randomZ]);
-	maker.color([1, 1, 1]);
-	maker.trapezoid({
-		width: Math.random() + 1,
-		depth: Math.random() + 1,
-		height: 1,
-		width2: Math.random() + 1,
-		depth2: Math.random() + 1
-	});
+	for (var i = 0; i < 15; i++)
+	{
+		var randomX;
+		var randomZ;
+		var randomWidth;
+		var randomDepth;
+		while (true)
+		{
+			maker.identity();
+			randomX = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
+			randomZ = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
+			maker.translate([randomX, 0.5, randomZ]);
+			maker.color([1, 1, 1]);
+			randomWidth = Math.random() + 1;
+			randomDepth = Math.random() + 1;
+			if (!randomX - randomWidth/2 < dimensions.widthOfMiddlePart/2)
+			{
+				if (!randomX + randomWidth/2 > -dimensions.widthOfMiddlePart/2)
+				{
+					if (!randomZ - randomDepth/2 < dimensions.widthOfMiddlePart/2)
+					{
+						if (!randomZ + randomDepth/2 > -dimensions.widthOfMiddlePart/2)
+						{
+							break;
+						}
+					}
+				}
+			}
+		}
+		maker.box({
+			width: randomWidth,
+			height: 1,
+			depth: randomDepth
+		});
+
+		var obstacleData = {
+			xLow: randomX - randomWidth/2,
+			xHigh: randomX + randomWidth/2,
+			zLow: randomZ - randomDepth/2,
+			zHigh: randomZ + randomDepth/2,
+			armor: 10
+		};
+
+		this.obstaclesData.push(obstacleData);
+	}
 	
 	maker.clear({uv: true});
 	this.model = maker.flush();

@@ -75,19 +75,22 @@ var customization = function()
 				blue = 1;
 				break;
 			case 6:
+				button.style.backgroundColor = "pink";
+				red = 1;
+				green = 0.75;
+				blue = 0.75;
+				break;
+			case 7:
 				button.style.backgroundColor = "white";
 				red = 1;
 				green = 1;
 				blue = 1;
 				break;
-			case 7:
+			case 8:
 				button.style.backgroundColor = "grey";
 				red = 0.5;
 				green = 0.5;
 				blue = 0.5;
-				break;
-			case 8:
-				button.style.backgroundColor = "black";
 				break;
 		}
 
@@ -103,8 +106,11 @@ var customization = function()
 	var finalGreen = 0;
 	var finalBlue = 0;
 
+	var buttonNoise = new Audio("Button.wav");
+
 	buttons[0].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[0], greens[0], blues[0], 1]);
 		finalRed = reds[0];
 		finalGreen = greens[0];
@@ -113,6 +119,7 @@ var customization = function()
 
 	buttons[1].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[1], greens[1], blues[1], 1]);
 		finalRed = reds[1];
 		finalGreen = greens[1];
@@ -121,6 +128,7 @@ var customization = function()
 
 	buttons[2].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[2], greens[2], blues[2], 1]);
 		finalRed = reds[2];
 		finalGreen = greens[2];
@@ -129,6 +137,7 @@ var customization = function()
 
 	buttons[3].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[3], greens[3], blues[3], 1]);
 		finalRed = reds[3];
 		finalGreen = greens[3];
@@ -137,6 +146,7 @@ var customization = function()
 
 	buttons[4].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[4], greens[4], blues[4], 1]);
 		finalRed = reds[4];
 		finalGreen = greens[4];
@@ -145,6 +155,7 @@ var customization = function()
 
 	buttons[5].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[5], greens[5], blues[5], 1]);
 		finalRed = reds[5];
 		finalGreen = greens[5];
@@ -153,6 +164,7 @@ var customization = function()
 
 	buttons[6].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[6], greens[6], blues[6], 1]);
 		finalRed = reds[6];
 		finalGreen = greens[6];
@@ -161,6 +173,7 @@ var customization = function()
 
 	buttons[7].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[7], greens[7], blues[7], 1]);
 		finalRed = reds[7];
 		finalGreen = greens[7];
@@ -169,6 +182,7 @@ var customization = function()
 
 	buttons[8].addEventListener("click", function()
 	{
+		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[8], greens[8], blues[8], 1]);
 		finalRed = reds[8];
 		finalGreen = greens[8];
@@ -186,17 +200,21 @@ var customization = function()
 	confirmationButton.style.height = "50px";
 	confirmationButton.style.position = "absolute";
 	confirmationButton.style.backgroundColor = "white";
-	confirmationButton.style.right = "50px";
+	confirmationButton.style.left = "355px";
 	confirmationButton.style.bottom = "50px";
 	confirmationButton.style.color = "black";
-	confirmationButton.innerHTML = "CONFIRM";
 	confirmationButton.align = "center";
-	confirmationButton.fontFamily = "Arial";
-	confirmationButton.fontSize = "20px";
+	confirmationButton.innerHTML = "CONFIRM";
+	confirmationButton.style.verticalAlign = "middle";
+	confirmationButton.style.lineHeight = "50px";
+
+	confirmationButton.style.fontFamily = 'monospace';
+	confirmationButton.style.fontSize = "18px";
 	confirmationButton.style.padding = "auto";
 
 	confirmationButton.addEventListener("click", function()
 	{
+		buttonNoise.play();
 		main(area, customizedColors);
 	});
 

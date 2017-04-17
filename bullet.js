@@ -43,6 +43,9 @@ Bullet.prototype.animate = function()
 };
 Bullet.prototype.shootFrom = function(ufo)
 {
+	var shootNoise = new Audio("Shoot.wav");
+	shootNoise.volume = 0.25;
+	shootNoise.play();
 	this.isActive = true;
 	this.orientation = ufo.orientation.y;
 	this.position.x = ufo.position.x - Math.sin(this.orientation)*ufo.dimensions.lengthOfGunBarrel;
@@ -50,15 +53,36 @@ Bullet.prototype.shootFrom = function(ufo)
 	this.speed.x = -Math.sin(this.orientation)*this.speedIntensity;
 	this.speed.z = -Math.cos(this.orientation)*this.speedIntensity;
 };
-Bullet.prototype.testForCollisions = function(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary)
+Bullet.prototype.testForCollisions = function(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary, arena)
 {
 	if (this.position.x < westWallBoundary || this.position.x > eastWallBoundary)
 	{
+		// TODO: Add Thud.
 		this.isActive = false;
 	}
 	if (this.position.z < northWallBoundary || this.position.z > southWallBoundary)
 	{
+		// TODO: Add Thud.
 		this.isActive = false;
+	}
+
+	for (var i = 0; i < 15; i++)
+	{
+		if (this.position.x > arena.obstaclesData[i].xLow - this.diameter)
+		{
+			if (this.position.x < arena.obstaclesData[i].xHigh + this.diameter)
+			{
+				if (this.position.z > arena.obstaclesData[i].zLow - this.diameter)
+				{
+					if (this.position.z < arena.obstaclesData[i].zHigh + this.diameter)
+					{
+						var thudNoise = new Audio("Thud.wav");
+						thudNoise.play();
+						this.isActive = false;
+					}
+				}
+			}
+		}
 	}
 };
 Bullet.prototype.control = function(ufo, isPressed)

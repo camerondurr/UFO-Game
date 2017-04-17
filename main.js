@@ -11,12 +11,7 @@ var main = function(area, customizedColors)
 	{
 		canvas.setBackgroundColor(0, 0, 0, 1);
 	});
-	
-	// Assets
-	//// Arena
-	var widthOfBoard = 50;
-	var arena = new Arena(canvas, widthOfBoard);
-	
+
 	//// UFO/Player
 	var dimensions = {
 		distanceAboveGround: 0.3,
@@ -38,8 +33,13 @@ var main = function(area, customizedColors)
 	dimensions.heightOfLabel = dimensions.heightOfUFO/2;
 	var ufo = new UFO(canvas, dimensions);
 
-	// TODO: Fix the bug associated with customizedColors being black no matter which color was last picked.
+	// TODO: Fix the bug associated with customizedColors not being passed through correctly.
 	// ufo.model.getShader().setColorMask([customizedColors.red, customizedColors.green, customizedColors.blue, 1]);
+	
+	// Assets
+	//// Arena
+	var widthOfBoard = 50;
+	var arena = new Arena(canvas, widthOfBoard, dimensions);
 	
 	//// Bullet
 	var bullet = new Bullet(canvas, dimensions);
@@ -62,18 +62,6 @@ var main = function(area, customizedColors)
 	// Animation
 	canvas.whenAnimate().then(function()
 	{
-		if (network.isConnected())
-		{
-			var users = network.session.getUsers();
-			for (var i in users)
-			{
-				if (users[i].p)
-				{
-					users[i].variable('p').interpolate(10);
-				}
-			}
-		}
-		
 		// Controls
 		ufo.control(isPressed);
 		bullet.control(ufo, isPressed);
@@ -88,8 +76,14 @@ var main = function(area, customizedColors)
 		var northWallBoundary = -widthOfBoard/2 + dimensions.widthOfMiddlePart/2;
 		var southWallBoundary = -northWallBoundary;
 		
-		ufo.testForCollisions(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary);
-		bullet.testForCollisions(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary);
+		ufo.testForCollisions(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary, arena);
+
+		var westWallBoundaryForBullet = -widthOfBoard/2 + bullet.diameter/2;
+		var eastWallBoundaryForBullet = -westWallBoundary;
+		var northWallBoundaryForBullet = -widthOfBoard/2 + bullet.diameter/2;
+		var southWallBoundaryForBullet = -northWallBoundary;
+
+		bullet.testForCollisions(westWallBoundaryForBullet, eastWallBoundaryForBullet, northWallBoundaryForBullet, southWallBoundaryForBullet, arena);
 	});
 	
 	// Draw
@@ -119,6 +113,7 @@ var main = function(area, customizedColors)
 				printer.rotateZ(ufo.orientation.z);
 
 				var texture = new GLTexture(canvas);
+
 				// TODO: Change the text field to be a variable that's based on the player's number in the lobby.
 				texture.text({text: "1", color: 'white', font: '40px Arial', width: 128, height: 128});
 				ufo.label.setTexture(texture);
@@ -137,54 +132,17 @@ var main = function(area, customizedColors)
 			printer.popMatrix();
 		}
 	});
+
+	canvas.whenDragged().then(function(o, event)
+	{
+		canvas.getCamera().oneFingerRotate(event, {radius: 4, type: 'polar'});
+	});
 	
 	var network = new Networking();
 	canvas.start();
 
 	// Network
-	// TODO: Test the network.
-	/*var session = null;
-	var me = null;
-	var server = null;
-
-	var init_rt = function()
-	{
-		session = null;
-		me = null;
-		server = new VNServer();
-		server.whenConnected().otherwise(function(s)
-		{
-			if (s == server)
-			{
-				console.log('will reconnect...');
-				server = null;
-				init_rt();
-			}
-		});
-		server.connect('UFO Game',
-			{
-				capacity: 4,
-				releaseSeats: true
-			}).then(function(session)
-		{
-			session = session;
-			me = server.me();
-			me.color = my_color;
-			me.variable('color').broadcast();
-			me.variable('p').whenValueChanged().then(function(event)
-			{
-				if (event.initiator != me)
-				{
-					sim_obj.position.x = me.p [0];
-					sim_obj.position.y = me.p [1];
-					sim_obj.position.z = me.p [2];
-					sim_obj.orientation = me.p [3];
-				}
-			});
-			vn.getWindowManager().createNotification('You are now connected!');
-		});
-	};
-	init_rt();*/
+	// TODO: Add networking code.
 };
 
 // Methods
