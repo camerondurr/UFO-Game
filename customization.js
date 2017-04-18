@@ -29,15 +29,16 @@ var customization = function()
 	var greens = new Array;
 	var blues = new Array;
 
+	var buttonSize = 50;
+
 	for (var i = 0; i < 9; i++)
 	{
 		var button = document.createElement("div");
-		var buttonSize = 50;
 
-		button.style.width = buttonSize + "px";
+		button.style.width = 4*buttonSize + "px";
 		button.style.height = buttonSize + "px";
 		button.style.position = "absolute";
-		button.style.right = buttonSize + "px";
+		button.style.right = 5*buttonSize + "px";
 		button.style.top = (i + 1)*buttonSize + "px";
 		button.style.marginBottom = buttonSize/2 + "px";
 		button.style.border = "1px solid white";
@@ -196,18 +197,17 @@ var customization = function()
 	};
 
 	var confirmationButton = document.createElement("div");
-	confirmationButton.style.width = "100px";
-	confirmationButton.style.height = "50px";
+	confirmationButton.style.width = 4*buttonSize + "px";
+	confirmationButton.style.height = buttonSize + "px";
 	confirmationButton.style.position = "absolute";
 	confirmationButton.style.backgroundColor = "white";
-	confirmationButton.style.left = "355px";
+	confirmationButton.style.right = 5*buttonSize + "px";
 	confirmationButton.style.bottom = "50px";
 	confirmationButton.style.color = "black";
 	confirmationButton.align = "center";
 	confirmationButton.innerHTML = "CONFIRM";
 	confirmationButton.style.verticalAlign = "middle";
 	confirmationButton.style.lineHeight = "50px";
-
 	confirmationButton.style.fontFamily = 'monospace';
 	confirmationButton.style.fontSize = "18px";
 	confirmationButton.style.padding = "auto";
