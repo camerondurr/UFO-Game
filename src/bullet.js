@@ -72,13 +72,13 @@ Bullet.prototype.testForCollisions = function(arena)
 
 	for (var i = 0; i < arena.numberOfObstacles; i++)
 	{
-		if (this.position.x > arena.obstaclesData[i].xLow - this.diameter)
+		if (this.position.x > arena.obstacles[i].xLow - this.diameter)
 		{
-			if (this.position.x < arena.obstaclesData[i].xHigh + this.diameter)
+			if (this.position.x < arena.obstacles[i].xHigh + this.diameter)
 			{
-				if (this.position.z > arena.obstaclesData[i].zLow - this.diameter)
+				if (this.position.z > arena.obstacles[i].zLow - this.diameter)
 				{
-					if (this.position.z < arena.obstaclesData[i].zHigh + this.diameter)
+					if (this.position.z < arena.obstacles[i].zHigh + this.diameter)
 					{
 						var thudSound = new Audio("src/sounds/effects/Thud.wav");
 						thudSound.play();

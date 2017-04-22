@@ -245,13 +245,13 @@ UFO.prototype.testForCollisions = function(arena)
 
     for (var i = 0; i < 15; i++)
     {
-        if (this.position.x > arena.obstaclesData[i].xLow - this.widthOfMiddlePart/2)
+        if (this.position.x > arena.obstacles[i].xLow - this.widthOfMiddlePart/2)
         {
-            if (this.position.x < arena.obstaclesData[i].xHigh + this.widthOfMiddlePart/2)
+            if (this.position.x < arena.obstacles[i].xHigh + this.widthOfMiddlePart/2)
             {
-                if (this.position.z > arena.obstaclesData[i].zLow - this.widthOfMiddlePart/2)
+                if (this.position.z > arena.obstacles[i].zLow - this.widthOfMiddlePart/2)
                 {
-                    if (this.position.z < arena.obstaclesData[i].zHigh + this.widthOfMiddlePart/2)
+                    if (this.position.z < arena.obstacles[i].zHigh + this.widthOfMiddlePart/2)
                     {
                         // TODO: Keep the UFO from passing through the obstacles.
                         this.speed.x = 0;

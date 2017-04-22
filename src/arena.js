@@ -1,122 +1,79 @@
+// Constructor
 var Arena = function(canvas, ufo)
 {
 	var maker = new GLObjectMaker(canvas);
 
-	var lengthOfBoard = 50;
+	this.ufo = ufo;
 
-    this.westWallBoundary = -lengthOfBoard/2;
+	this.lengthOfBoard = 50;
+
+    maker.identity();
+    maker.rotateX(-3.14/2);
+    maker.color([1, 0, 0]);
+    maker.rectangle({
+        width: this.lengthOfBoard,
+        height: this.lengthOfBoard
+    });
+    maker.clear({uv: true});
+    this.floorModel = maker.flush();
+
+    var widthOfWall = this.lengthOfBoard;
+    var depthOfWall = 1;
+    var heightOfWall = 1;
+
+    var distanceToBuildPoint = this.lengthOfBoard/2 + depthOfWall/2;
+    var heightOfBuildPoint = heightOfWall/2;
+
+    maker.color([1, 1, 1]);
+    for (var i = 0; i < 4; i++)
+    {
+        maker.identity();
+
+        var buildPoint = [Math.sin(i*(3.14/2))*distanceToBuildPoint, heightOfBuildPoint, -Math.cos(i*(3.14/2))*distanceToBuildPoint];
+        maker.translate(buildPoint);
+
+        var width = 0;
+        var depth = 0;
+        if ((i + 1)%2 === 0)
+        {
+            width = depthOfWall;
+            depth = widthOfWall;
+        }
+        else
+        {
+            width = widthOfWall;
+            depth = depthOfWall;
+        }
+        maker.box({
+            width: width,
+            height: heightOfWall,
+            depth: depth
+        });
+    }
+    maker.clear({uv: true});
+    this.wallModels = maker.flush();
+
+    this.westWallBoundary = -this.lengthOfBoard/2;
     this.eastWallBoundary = -this.westWallBoundary;
-    this.northWallBoundary = -lengthOfBoard/2;
+    this.northWallBoundary = -this.lengthOfBoard/2;
     this.southWallBoundary = -this.northWallBoundary;
 
-	//// Arena
-	////// Floor
-	maker.identity();
-	maker.rotateX(-3.14/2);
-	maker.color([1, 0, 0]);
-	maker.rectangle({
-		width: lengthOfBoard,
-		height: lengthOfBoard
-	});
-	////// Walls
-	var widthOfWall = lengthOfBoard;
-	var depthOfWall = 1;
-	var heightOfWall = 1;
-	var distanceToBuildPoint = lengthOfBoard/2 + depthOfWall/2;
-	maker.color([1, 1, 1]);
-	//////// North
-	maker.identity();
-	var northWallBuildPoint = [0, heightOfWall/2, -distanceToBuildPoint];
-	maker.translate(northWallBuildPoint);
-	maker.box({
-		width: widthOfWall,
-		height: heightOfWall,
-		depth: depthOfWall
-	});
-	//////// East
-	maker.identity();
-	var eastWallBuildPoint = [distanceToBuildPoint, heightOfWall/2, 0];
-	maker.translate(eastWallBuildPoint);
-	maker.rotateY(3.14/2);
-	maker.box({
-		width: widthOfWall,
-		height: heightOfWall,
-		depth: depthOfWall
-	});
-	//////// South
-	maker.identity();
-	var westWallBuildPoint = [0, heightOfWall/2, distanceToBuildPoint];
-	maker.translate(westWallBuildPoint);
-	maker.box({
-		width: widthOfWall,
-		height: heightOfWall,
-		depth: depthOfWall
-	});
-	//////// West
-	maker.identity();
-	var southWallBuildPoint = [-distanceToBuildPoint, heightOfWall/2, 0];
-	maker.translate(southWallBuildPoint);
-	maker.rotateY(3.14/2);
-	maker.box({
-		width: widthOfWall,
-		height: heightOfWall,
-		depth: depthOfWall
-	});
-
     this.numberOfObstacles = 15;
-	this.obstaclesData = new Array;
-	////// Obstacles
+	this.obstacles = new Array;
 	for (var i = 0; i < this.numberOfObstacles; i++)
 	{
-		var randomX;
-		var randomZ;
-		var randomWidth;
-		var randomDepth;
-		while (true)
-		{
-			maker.identity();
-			randomX = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-			randomZ = -lengthOfBoard/2 + 2 + Math.random()*(lengthOfBoard - 4);
-			maker.translate([randomX, 0.5, randomZ]);
-			maker.color([1, 1, 1]);
-			randomWidth = Math.random() + 1;
-			randomDepth = Math.random() + 1;
-			if (!randomX - randomWidth/2 < ufo.widthOfMiddlePart/2)
-			{
-				if (!randomX + randomWidth/2 > -ufo.widthOfMiddlePart/2)
-				{
-					if (!randomZ - randomDepth/2 < ufo.widthOfMiddlePart/2)
-					{
-						if (!randomZ + randomDepth/2 > -ufo.widthOfMiddlePart/2)
-						{
-							break;
-						}
-					}
-				}
-			}
-		}
-		maker.box({
-			width: randomWidth,
-			height: 1,
-			depth: randomDepth
-		});
-
-		var obstacleData = {
-			xLow: randomX - randomWidth/2,
-			xHigh: randomX + randomWidth/2,
-			zLow: randomZ - randomDepth/2,
-			zHigh: randomZ + randomDepth/2,
-			armor: 10
-		};
-
-		this.obstaclesData.push(obstacleData);
+        var obstacle = new Obstacle(canvas, this);
+		this.obstacles.push(obstacle);
 	}
-	
-	maker.clear({uv: true});
-	this.model = maker.flush();
 };
 
+// Methods
 Arena.prototype.draw = function()
 {
-	this.model.draw();
+    this.floorModel.draw();
+	this.wallModels.draw();
+	for (var i = 0; i < this.numberOfObstacles; i++)
+    {
+        this.obstacles[i].draw();
+    }
 };
