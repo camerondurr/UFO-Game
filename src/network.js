@@ -9,7 +9,7 @@ var Networking = function()
 
 Networking.prototype.isConnected = function()
 {
-	if (this.session == null)
+	if (this.session === null)
 	{
 		return false;
 	}
@@ -28,7 +28,7 @@ Networking.prototype.connect = function()
 
 	this.server.whenConnected().otherwise(function(s)
 	{
-		if (s == self.server)
+		if (s === self.server)
 		{
 			console.log('will reconnect...');
 			self.server = null;
@@ -47,7 +47,7 @@ Networking.prototype.connect = function()
 		self.me.variable('color').broadcast();
 		self.me.variable('p').whenValueChanged().then(function(event)
 		{
-			if (event.initiator != self.me)
+			if (event.initiator !== self.me)
 			{
 				sim_obj.position.x = self.me.p [0];
 				sim_obj.position.y = self.me.p [1];

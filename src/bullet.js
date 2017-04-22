@@ -1,72 +1,76 @@
+// Constructor
 var Bullet = function(canvas, ufo)
 {
 	var maker = new GLObjectMaker(canvas);
-	//// Bullet
-	this.diameter = ufo.widthOfGunBarrel;
-	maker.identity();
-	maker.color([1, 1, 1]);
-	maker.sphere({
-		width: this.diameter,
-		depth: this.diameter,
-		height: this.diameter,
-		resolution: 32
-	});
-	maker.clear({uv: true});
-	this.model = maker.flush();
-	
-	//// Bullet Data
+
+	this.ufo = ufo;
+	this.model = this.makeModel(maker);
+
 	this.isActive = false;
-	this.orientation = 0;
-	this.position =
-		{
-			x: 0,
-			y: ufo.heightOfGunBarrel,
-			z: 0
-		};
-	this.speed =
-		{
-			x: 0,
-			z: 0
-		};
+	this.position = {
+        x: 0,
+        y: ufo.heightOfGunBarrel,
+        z: 0
+	};
+	this.speed = {
+        x: 0,
+        z: 0
+    };
 	this.speedIntensity = 0.75;
 };
 
-Bullet.prototype.draw = function()
+// Methods
+Bullet.prototype.makeModel = function(maker)
 {
-	this.model.draw();
+    this.diameter = this.ufo.widthOfGunBarrel;
+
+    maker.identity();
+    maker.color([1, 1, 1]);
+    maker.sphere({
+        width: this.diameter,
+        depth: this.diameter,
+        height: this.diameter,
+        resolution: 32
+    });
+
+    maker.clear({uv: true});
+    return maker.flush();
 };
+
 Bullet.prototype.animate = function()
 {
-	// Bullet Movement
-	this.position.x += this.speed.x;
-	this.position.z += this.speed.z;
+    this.position.x += this.speed.x;
+    this.position.z += this.speed.z;
 };
-Bullet.prototype.shootFrom = function(ufo)
+Bullet.prototype.draw = function()
 {
-	var shootNoise = new Audio("src/sounds/effects/Shoot.wav");
-	shootNoise.volume = 0.25;
-	shootNoise.play();
-	this.isActive = true;
-	this.orientation = ufo.orientation.y;
-	this.position.x = ufo.position.x - Math.sin(this.orientation)*ufo.lengthOfGunBarrel;
-	this.position.z = ufo.position.z - Math.cos(this.orientation)*ufo.lengthOfGunBarrel;
-	this.speed.x = -Math.sin(this.orientation)*this.speedIntensity;
-	this.speed.z = -Math.cos(this.orientation)*this.speedIntensity;
+    this.model.draw();
 };
+
 Bullet.prototype.testForCollisions = function(arena)
 {
-	if (this.position.x < arena.westWallBoundary || this.position.x > arena.eastWallBoundary)
+	if (this.position.x < arena.westWallBoundary + this.diameter/2)
 	{
 		// TODO: Add Thud.
 		this.isActive = false;
 	}
-	if (this.position.z < arena.northWallBoundary || this.position.z > arena.southWallBoundary)
+	if (this.position.x > arena.eastWallBoundary - this.diameter/2)
+    {
+        // TODO: Add Thud.
+        this.isActive = false;
+    }
+	if (this.position.z < arena.northWallBoundary + this.diameter/2)
 	{
 		// TODO: Add Thud.
 		this.isActive = false;
 	}
+	if (this.position.z > arena.southWallBoundary - this.diameter/2)
+    {
+        // TODO: Add Thud.
+        this.isActive = false;
+    }
 
-	for (var i = 0; i < 15; i++)
+	for (var i = 0; i < arena.numberOfObstacles; i++)
 	{
 		if (this.position.x > arena.obstaclesData[i].xLow - this.diameter)
 		{
@@ -76,23 +80,12 @@ Bullet.prototype.testForCollisions = function(arena)
 				{
 					if (this.position.z < arena.obstaclesData[i].zHigh + this.diameter)
 					{
-						var thudNoise = new Audio("Thud.wav");
-						thudNoise.play();
+						var thudSound = new Audio("Thud.wav");
+						thudSound.play();
 						this.isActive = false;
 					}
 				}
 			}
-		}
-	}
-};
-Bullet.prototype.control = function(ufo, isPressed)
-{
-	//// If the space bar is pressed...
-	if (isPressed[32])
-	{
-		if (this.isActive == false)
-		{
-			this.shootFrom(ufo);
 		}
 	}
 };

@@ -6,18 +6,13 @@ var main = function(area, customizedColors)
 	}
 
 	var canvas = new GLCanvas(area);
-	area.style.background = 'black';
-	canvas.whenStarted().then(function()
-	{
-		canvas.setBackgroundColor(0, 0, 0, 1);
-	});
+
+    drawHud(area);
 
 	var ufo = new UFO(canvas);
 	ufo.model.getShader().setColorMask([customizedColors.red, customizedColors.green, customizedColors.blue, 1]);
 
     var arena = new Arena(canvas, ufo);
-	var bullet = new Bullet(canvas, ufo);
-	var hud = new HUD(area);
 
 	var isPressed = new Array(100);
 	canvas.whenKeyPressed().then(function(keyCode)
@@ -33,13 +28,8 @@ var main = function(area, customizedColors)
 	canvas.whenAnimate().then(function()
 	{
 		ufo.control(isPressed);
-		bullet.control(ufo, isPressed);
-
 		ufo.animate();
-		bullet.animate();
-
 		ufo.testForCollisions(arena);
-		bullet.testForCollisions(arena);
 	});
 	
 	// Draw
@@ -78,15 +68,15 @@ var main = function(area, customizedColors)
 				printer.popMatrix();
 			}
 		}
-		
-		// Draw Bullets
-		if (bullet.isActive)
-		{
-			printer.pushMatrix();
-			printer.translate([bullet.position.x, bullet.position.y, bullet.position.z]);
-			bullet.draw();
-			printer.popMatrix();
-		}
+
+        // Draw Bullets
+        if (ufo.bullet.isActive)
+        {
+            printer.pushMatrix();
+            printer.translate([ufo.bullet.position.x, ufo.bullet.position.y, ufo.bullet.position.z]);
+            ufo.bullet.draw();
+            printer.popMatrix();
+        }
 	});
 
 	canvas.whenDragged().then(function(o, event)
@@ -98,8 +88,15 @@ var main = function(area, customizedColors)
 	canvas.start();
 
 	var mainMusic = new Audio("src/sounds/music/Retro Sci-Fi Planet.mp3");
+	mainMusic.volume = 0.25;
 	mainMusic.play();
 
 	// Network
 	// TODO: Add networking code.
+};
+
+// Methods
+var drawHud = function(area)
+{
+    var hud = new HUD(area);
 };

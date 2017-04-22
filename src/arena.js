@@ -63,9 +63,10 @@ var Arena = function(canvas, ufo)
 		depth: depthOfWall
 	});
 
+    this.numberOfObstacles = 15;
 	this.obstaclesData = new Array;
 	////// Obstacles
-	for (var i = 0; i < 15; i++)
+	for (var i = 0; i < this.numberOfObstacles; i++)
 	{
 		var randomX;
 		var randomZ;

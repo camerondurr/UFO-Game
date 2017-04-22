@@ -34,6 +34,8 @@ var UFO = function(canvas)
 	this.speedIntensity = 0.0075;
 	this.spinIntensity = 0.0625;
 	this.tiltLimit = 3.14/16;
+
+    this.bullet = new Bullet(canvas, this);
 };
 
 // Methods
@@ -41,7 +43,6 @@ UFO.prototype.makeModel = function(maker)
 {
     maker.identity();
     maker.translate([0, this.distanceAboveGround, 0]);
-
 
     maker.translate([0, this.heightOfBottomPart/2, 0]);
     maker.color(this.color);
@@ -67,7 +68,6 @@ UFO.prototype.makeModel = function(maker)
     });
     maker.translate([0, this.heightOfMiddlePart/2, 0]);
 
-
     maker.translate([0, this.heightOfTopPart/2, 0]);
     maker.color(this.color);
     maker.cylinder({
@@ -78,7 +78,6 @@ UFO.prototype.makeModel = function(maker)
         depth2: this.widthOfTopPart,
         resolution: 32
     });
-
 
     maker.translate([0, 0, -this.lengthOfGunBarrel/2]);
     maker.rotateX(-3.14/2);
@@ -119,45 +118,68 @@ UFO.prototype.makeLabel = function(maker)
 
 UFO.prototype.control = function(isPressed)
 {
-    //// If the left arrow key is pressed...
-    if (isPressed[37])
-    {
-        this.orientation.y += this.spinIntensity;
-    }
-    //// If the right arrow key is pressed...
-    if (isPressed[39])
-    {
-        this.orientation.y -= this.spinIntensity;
-    }
-    //// If the up arrow key or 'w' key is pressed...
+    // W Key / Up Arrow Key
     if (isPressed[38] || isPressed[87])
     {
         this.speed.x -= Math.sin(this.orientation.y)*this.speedIntensity;
         this.speed.z -= Math.cos(this.orientation.y)*this.speedIntensity;
         // TODO: Add tilting logic for when the UFO moves forward.
     }
-    //// If the down arrow key or 's' key is pressed...
-    if (isPressed[40] || isPressed[83])
-    {
-        this.speed.x += Math.sin(this.orientation.y)*this.speedIntensity;
-        this.speed.z += Math.cos(this.orientation.y)*this.speedIntensity;
-        // TODO: Add tilting logic for when the UFO moves backward.
-    }
-    //// If the 'a' key is pressed...
+    // A Key
     if (isPressed[65])
     {
         this.speed.x -= Math.cos(this.orientation.y)*this.speedIntensity;
         this.speed.z += Math.sin(this.orientation.y)*this.speedIntensity;
         this.orientation.z += this.speedIntensity;
     }
-    //// If the 'd' key is pressed...
+    // S Key / Down Key
+    if (isPressed[40] || isPressed[83])
+    {
+        this.speed.x += Math.sin(this.orientation.y)*this.speedIntensity;
+        this.speed.z += Math.cos(this.orientation.y)*this.speedIntensity;
+        // TODO: Add tilting logic for when the UFO moves backward.
+    }
+    // D Key
     if (isPressed[68])
     {
         this.speed.x += Math.cos(this.orientation.y)*this.speedIntensity;
         this.speed.z -= Math.sin(this.orientation.y)*this.speedIntensity;
         this.orientation.z -= this.speedIntensity;
     }
+
+    // Left Arrow Key
+    if (isPressed[37])
+    {
+        this.orientation.y += this.spinIntensity;
+    }
+    // Right Arrow Key
+    if (isPressed[39])
+    {
+        this.orientation.y -= this.spinIntensity;
+    }
+
+    // Space Bar
+    if (isPressed[32])
+    {
+        if (this.bullet.isActive === false)
+        {
+            this.shoot(this.bullet);
+        }
+    }
 };
+UFO.prototype.shoot = function(bullet)
+{
+    var shootSound = new Audio("src/sounds/effects/Shoot.wav");
+    shootSound.volume = 0.25;
+    shootSound.play();
+
+    bullet.isActive = true;
+    bullet.position.x = this.position.x - Math.sin(this.orientation.y)*this.lengthOfGunBarrel;
+    bullet.position.z = this.position.z - Math.cos(this.orientation.y)*this.lengthOfGunBarrel;
+    bullet.speed.x = -Math.sin(this.orientation.y)*this.bullet.speedIntensity;
+    bullet.speed.z = -Math.cos(this.orientation.y)*this.bullet.speedIntensity;
+};
+
 UFO.prototype.animate = function()
 {
     this.label.rotateY(0.075);
@@ -187,31 +209,33 @@ UFO.prototype.animate = function()
     {
         this.orientation.z = this.tiltLimit;
     }
+
+    this.bullet.animate();
 };
 UFO.prototype.testForCollisions = function(arena)
 {
-    if (this.position.x < arena.westWallBoundary + this.widthOfMiddlePart)
+    if (this.position.x < arena.westWallBoundary + this.widthOfMiddlePart/2)
     {
         // TODO: Add Thud.
-        this.position.x = arena.westWallBoundary;
+        this.position.x = arena.westWallBoundary + this.widthOfMiddlePart/2;
         this.speed.x = 0;
     }
-    else if (this.position.x > arena.eastWallBoundary - this.widthOfMiddlePart)
+    else if (this.position.x > arena.eastWallBoundary - this.widthOfMiddlePart/2)
     {
         // TODO: Add Thud.
-        this.position.x = arena.eastWallBoundary;
+        this.position.x = arena.eastWallBoundary - this.widthOfMiddlePart/2;
         this.speed.x = 0;
     }
-    if (this.position.z < arena.northWallBoundary + this.widthOfMiddlePart)
+    if (this.position.z < arena.northWallBoundary + this.widthOfMiddlePart/2)
     {
         // TODO: Add Thud.
-        this.position.z = arena.northWallBoundary;
+        this.position.z = arena.northWallBoundary + this.widthOfMiddlePart/2;
         this.speed.z = 0;
     }
-    else if (this.position.z > arena.southWallBoundary - this.widthOfMiddlePart)
+    else if (this.position.z > arena.southWallBoundary - this.widthOfMiddlePart/2)
     {
         // TODO: Add Thud.
-        this.position.z = arena.southWallBoundary;
+        this.position.z = arena.southWallBoundary - this.widthOfMiddlePart/2;
         this.speed.z = 0;
     }
 
@@ -233,6 +257,8 @@ UFO.prototype.testForCollisions = function(arena)
             }
         }
     }
+
+    this.bullet.testForCollisions(arena);
 };
 
 UFO.prototype.draw = function()

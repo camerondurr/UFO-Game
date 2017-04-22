@@ -3,16 +3,15 @@ var customization = function()
 	var area = vn.getScreen();
 	var canvas = new GLCanvas(area);
 
-	// UFO/Player
 	var ufo = new UFO(canvas);
 
 	var buttons = new Array;
+    var buttonSize = 50;
+    var buttonSound = new Audio("src/sounds/effects/Button.wav");
+
 	var reds = new Array;
 	var greens = new Array;
 	var blues = new Array;
-
-	var buttonSize = 50;
-    var buttonSound = new Audio("src/sounds/effects/Button.wav");
 
 	for (var i = 0; i < 9; i++)
 	{
@@ -78,17 +77,15 @@ var customization = function()
 				break;
 		}
 
-		area.appendChild(button);
-
 		reds.push(red);
 		greens.push(green);
 		blues.push(blue);
 
+        area.appendChild(button);
 		buttons.push(button);
 	}
 
 	var toggledButtonIndex = 0;
-
 	for (var i = 0; i < 9; i++)
     {
         buttons[i].addEventListener("click", function()
@@ -104,50 +101,52 @@ var customization = function()
 	var customizedColors = {red: reds[toggledButtonIndex], green: greens[toggledButtonIndex], blue: blues[toggledButtonIndex]};
 
 	var confirmationButton = document.createElement("div");
+
+    confirmationButton.style.position = "absolute";
+    confirmationButton.style.right = 5*buttonSize + "px";
+    confirmationButton.style.bottom = buttonSize + "px";
 	confirmationButton.style.width = 4*buttonSize + "px";
 	confirmationButton.style.height = buttonSize + "px";
-	confirmationButton.style.position = "absolute";
 	confirmationButton.style.backgroundColor = "white";
-	confirmationButton.style.right = 5*buttonSize + "px";
-	confirmationButton.style.bottom = "50px";
 	confirmationButton.style.color = "black";
 	confirmationButton.align = "center";
+    confirmationButton.style.lineHeight = buttonSize + "px";
+    confirmationButton.style.fontFamily = "monospace";
+    confirmationButton.style.fontSize = "18px";
 	confirmationButton.innerHTML = "CONFIRM";
-	confirmationButton.style.verticalAlign = "middle";
-	confirmationButton.style.lineHeight = "50px";
-	confirmationButton.style.fontFamily = 'monospace';
-	confirmationButton.style.fontSize = "18px";
-	confirmationButton.style.padding = "auto";
 
 	confirmationButton.addEventListener("click", function()
 	{
+        menuMusic.pause();
 		buttonSound.play();
-		menuMusic.pause();
+
 		main(area, customizedColors);
 	});
 
 	area.appendChild(confirmationButton);
 
-	// Animation
+	// Animate and Draw
 	canvas.whenAnimate().then(function()
 	{
 		ufo.display();
 	});
 
-	// Render
 	canvas.whenDraw().then(function()
 	{
 		var printer = canvas.getPrinter();
 		var cameraHeight = 1;
 		var cameraDistance = 3.5;
+
 		printer.translate([-1.25, -cameraHeight, -cameraDistance]);
 		printer.rotateY(3.14);
 
-		// Draw UFO
+		// UFO
 		printer.pushMatrix();
+
 		var texture = new GLTexture(canvas);
 		texture.text({text: "1", color: 'white', font: '40px Arial', width: 128, height: 128});
 		ufo.label.setTexture(texture);
+
 		ufo.draw();
 		printer.popMatrix();
 	});
