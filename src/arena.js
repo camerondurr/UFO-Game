@@ -1,6 +1,14 @@
-var Arena = function(canvas, lengthOfBoard, dimensions)
+var Arena = function(canvas, ufo)
 {
 	var maker = new GLObjectMaker(canvas);
+
+	var lengthOfBoard = 50;
+
+    this.westWallBoundary = -lengthOfBoard/2;
+    this.eastWallBoundary = -this.westWallBoundary;
+    this.northWallBoundary = -lengthOfBoard/2;
+    this.southWallBoundary = -this.northWallBoundary;
+
 	//// Arena
 	////// Floor
 	maker.identity();
@@ -72,13 +80,13 @@ var Arena = function(canvas, lengthOfBoard, dimensions)
 			maker.color([1, 1, 1]);
 			randomWidth = Math.random() + 1;
 			randomDepth = Math.random() + 1;
-			if (!randomX - randomWidth/2 < dimensions.widthOfMiddlePart/2)
+			if (!randomX - randomWidth/2 < ufo.widthOfMiddlePart/2)
 			{
-				if (!randomX + randomWidth/2 > -dimensions.widthOfMiddlePart/2)
+				if (!randomX + randomWidth/2 > -ufo.widthOfMiddlePart/2)
 				{
-					if (!randomZ - randomDepth/2 < dimensions.widthOfMiddlePart/2)
+					if (!randomZ - randomDepth/2 < ufo.widthOfMiddlePart/2)
 					{
-						if (!randomZ + randomDepth/2 > -dimensions.widthOfMiddlePart/2)
+						if (!randomZ + randomDepth/2 > -ufo.widthOfMiddlePart/2)
 						{
 							break;
 						}

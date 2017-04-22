@@ -1,8 +1,8 @@
-var Bullet = function(canvas, dimensions)
+var Bullet = function(canvas, ufo)
 {
 	var maker = new GLObjectMaker(canvas);
 	//// Bullet
-	this.diameter = dimensions.widthOfGunBarrel;
+	this.diameter = ufo.widthOfGunBarrel;
 	maker.identity();
 	maker.color([1, 1, 1]);
 	maker.sphere({
@@ -20,7 +20,7 @@ var Bullet = function(canvas, dimensions)
 	this.position =
 		{
 			x: 0,
-			y: dimensions.heightOfGunBarrel,
+			y: ufo.heightOfGunBarrel,
 			z: 0
 		};
 	this.speed =
@@ -48,19 +48,19 @@ Bullet.prototype.shootFrom = function(ufo)
 	shootNoise.play();
 	this.isActive = true;
 	this.orientation = ufo.orientation.y;
-	this.position.x = ufo.position.x - Math.sin(this.orientation)*ufo.dimensions.lengthOfGunBarrel;
-	this.position.z = ufo.position.z - Math.cos(this.orientation)*ufo.dimensions.lengthOfGunBarrel;
+	this.position.x = ufo.position.x - Math.sin(this.orientation)*ufo.lengthOfGunBarrel;
+	this.position.z = ufo.position.z - Math.cos(this.orientation)*ufo.lengthOfGunBarrel;
 	this.speed.x = -Math.sin(this.orientation)*this.speedIntensity;
 	this.speed.z = -Math.cos(this.orientation)*this.speedIntensity;
 };
-Bullet.prototype.testForCollisions = function(westWallBoundary, eastWallBoundary, northWallBoundary, southWallBoundary, arena)
+Bullet.prototype.testForCollisions = function(arena)
 {
-	if (this.position.x < westWallBoundary || this.position.x > eastWallBoundary)
+	if (this.position.x < arena.westWallBoundary || this.position.x > arena.eastWallBoundary)
 	{
 		// TODO: Add Thud.
 		this.isActive = false;
 	}
-	if (this.position.z < northWallBoundary || this.position.z > southWallBoundary)
+	if (this.position.z < arena.northWallBoundary || this.position.z > arena.southWallBoundary)
 	{
 		// TODO: Add Thud.
 		this.isActive = false;

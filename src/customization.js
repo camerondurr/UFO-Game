@@ -4,25 +4,7 @@ var customization = function()
 	var canvas = new GLCanvas(area);
 
 	// UFO/Player
-	var dimensions = {
-		distanceAboveGround: 0.3,
-		heightOfBottomPart: 0.15,
-		widthOfBottomPart: 0.75,
-		heightOfMiddlePart: 0.1,
-		widthOfMiddlePart: 1.75,
-		heightOfTopPart: 0.15,
-		widthOfTopPart: 0.75,
-		heightOfUFO: 0,
-		heightOfGunBarrel: 0,
-		widthOfGunBarrel: 0.1,
-		lengthOfGunBarrel: 0.875,
-		diameterOfCockpit: 0.5,
-		heightOfLabel: 0
-	};
-	dimensions.heightOfUFO = getHeightOfUFOUsingDimensions(dimensions);
-	dimensions.heightOfGunBarrel = getHeightOfGunBarrelUsingDimensions(dimensions);
-	dimensions.heightOfLabel = dimensions.heightOfUFO/2;
-	var ufo = new UFO(canvas, dimensions);
+	var ufo = new UFO(canvas);
 
 	var buttons = new Array;
 	var reds = new Array;
@@ -30,22 +12,23 @@ var customization = function()
 	var blues = new Array;
 
 	var buttonSize = 50;
+    var buttonSound = new Audio("src/sounds/effects/Button.wav");
 
 	for (var i = 0; i < 9; i++)
 	{
 		var button = document.createElement("div");
 
+        button.style.position = "absolute";
+        button.style.top = (i + 1)*buttonSize + "px";
+        button.style.right = 5*buttonSize + "px";
 		button.style.width = 4*buttonSize + "px";
 		button.style.height = buttonSize + "px";
-		button.style.position = "absolute";
-		button.style.right = 5*buttonSize + "px";
-		button.style.top = (i + 1)*buttonSize + "px";
-		button.style.marginBottom = buttonSize/2 + "px";
 		button.style.border = "1px solid white";
 
 		var red = 0;
 		var green = 0;
 		var blue = 0;
+
 		switch (i)
 		{
 			case 0:
@@ -100,62 +83,61 @@ var customization = function()
 		reds.push(red);
 		greens.push(green);
 		blues.push(blue);
+
 		buttons.push(button);
 	}
 
-	var buttonNoise = new Audio("src/sounds/effects/Button.wav");
-
 	buttons[0].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[0], greens[0], blues[0], 1]);
 	});
 
 	buttons[1].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[1], greens[1], blues[1], 1]);
 	});
 
 	buttons[2].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[2], greens[2], blues[2], 1]);
 	});
 
 	buttons[3].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[3], greens[3], blues[3], 1]);
 	});
 
 	buttons[4].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[4], greens[4], blues[4], 1]);
 	});
 
 	buttons[5].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[5], greens[5], blues[5], 1]);
 	});
 
 	buttons[6].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[6], greens[6], blues[6], 1]);
 	});
 
 	buttons[7].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[7], greens[7], blues[7], 1]);
 	});
 
 	buttons[8].addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		ufo.model.getShader().setColorMask([reds[8], greens[8], blues[8], 1]);
 	});
 
@@ -183,7 +165,7 @@ var customization = function()
 
 	confirmationButton.addEventListener("click", function()
 	{
-		buttonNoise.play();
+		buttonSound.play();
 		menuMusic.pause();
 		main(area, customizedColors);
 	});
@@ -216,5 +198,6 @@ var customization = function()
 
 	canvas.start();
 	var menuMusic = new Audio("src/sounds/music/Trouble on Mercury.mp3");
+	menuMusic.volume = 0.25;
 	menuMusic.play();
 };
