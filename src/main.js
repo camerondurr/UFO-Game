@@ -140,6 +140,8 @@ var main = function(area, customizedColors)
 	
 	var network = new Networking();
 	canvas.start();
+	var mainMusic = new Audio("src/sounds/music/Retro Sci-Fi Planet.mp3");
+	mainMusic.play();
 
 	// Network
 	// TODO: Add networking code.

@@ -103,97 +103,66 @@ var customization = function()
 		buttons.push(button);
 	}
 
-	var finalRed = 0;
-	var finalGreen = 0;
-	var finalBlue = 0;
-
-	var buttonNoise = new Audio("Button.wav");
+	var buttonNoise = new Audio("src/sounds/effects/Button.wav");
 
 	buttons[0].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[0], greens[0], blues[0], 1]);
-		finalRed = reds[0];
-		finalGreen = greens[0];
-		finalBlue = blues[0];
 	});
 
 	buttons[1].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[1], greens[1], blues[1], 1]);
-		finalRed = reds[1];
-		finalGreen = greens[1];
-		finalBlue = blues[1];
 	});
 
 	buttons[2].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[2], greens[2], blues[2], 1]);
-		finalRed = reds[2];
-		finalGreen = greens[2];
-		finalBlue = blues[2];
 	});
 
 	buttons[3].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[3], greens[3], blues[3], 1]);
-		finalRed = reds[3];
-		finalGreen = greens[3];
-		finalBlue = blues[3];
 	});
 
 	buttons[4].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[4], greens[4], blues[4], 1]);
-		finalRed = reds[4];
-		finalGreen = greens[4];
-		finalBlue = blues[4];
 	});
 
 	buttons[5].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[5], greens[5], blues[5], 1]);
-		finalRed = reds[5];
-		finalGreen = greens[5];
-		finalBlue = blues[5];
 	});
 
 	buttons[6].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[6], greens[6], blues[6], 1]);
-		finalRed = reds[6];
-		finalGreen = greens[6];
-		finalBlue = blues[6];
 	});
 
 	buttons[7].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[7], greens[7], blues[7], 1]);
-		finalRed = reds[7];
-		finalGreen = greens[7];
-		finalBlue = blues[7];
 	});
 
 	buttons[8].addEventListener("click", function()
 	{
 		buttonNoise.play();
 		ufo.model.getShader().setColorMask([reds[8], greens[8], blues[8], 1]);
-		finalRed = reds[8];
-		finalGreen = greens[8];
-		finalBlue = blues[8];
 	});
 
 	var customizedColors = {
-		red: finalRed,
-		green: finalGreen,
-		blue: finalBlue
+		red: reds[0],
+		green: greens[0],
+		blue: blues[0]
 	};
 
 	var confirmationButton = document.createElement("div");
@@ -215,6 +184,7 @@ var customization = function()
 	confirmationButton.addEventListener("click", function()
 	{
 		buttonNoise.play();
+		menuMusic.pause();
 		main(area, customizedColors);
 	});
 
@@ -245,5 +215,6 @@ var customization = function()
 	});
 
 	canvas.start();
-	// main(area);
+	var menuMusic = new Audio("src/sounds/music/Trouble on Mercury.mp3");
+	menuMusic.play();
 };

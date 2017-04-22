@@ -43,7 +43,7 @@ Bullet.prototype.animate = function()
 };
 Bullet.prototype.shootFrom = function(ufo)
 {
-	var shootNoise = new Audio("Shoot.wav");
+	var shootNoise = new Audio("src/sounds/effects/Shoot.wav");
 	shootNoise.volume = 0.25;
 	shootNoise.play();
 	this.isActive = true;
