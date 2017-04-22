@@ -55,7 +55,6 @@ UFO.prototype.makeModel = function(maker)
     });
     maker.translate([0, this.heightOfBottomPart/2, 0]);
 
-
     maker.translate([0, this.heightOfMiddlePart/2, 0]);
     maker.color(this.color);
     maker.cylinder({

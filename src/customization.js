@@ -87,65 +87,21 @@ var customization = function()
 		buttons.push(button);
 	}
 
-	buttons[0].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[0], greens[0], blues[0], 1]);
-	});
+	var toggledButtonIndex = 0;
 
-	buttons[1].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[1], greens[1], blues[1], 1]);
-	});
+	for (var i = 0; i < 9; i++)
+    {
+        buttons[i].addEventListener("click", function()
+        {
+            buttonSound.play();
 
-	buttons[2].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[2], greens[2], blues[2], 1]);
-	});
+            toggledButtonIndex = Math.round(event.screenY/buttonSize) - 3;
+            ufo.model.getShader().setColorMask([reds[toggledButtonIndex], greens[toggledButtonIndex], blues[toggledButtonIndex], 1]);
+        });
+    }
 
-	buttons[3].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[3], greens[3], blues[3], 1]);
-	});
-
-	buttons[4].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[4], greens[4], blues[4], 1]);
-	});
-
-	buttons[5].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[5], greens[5], blues[5], 1]);
-	});
-
-	buttons[6].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[6], greens[6], blues[6], 1]);
-	});
-
-	buttons[7].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[7], greens[7], blues[7], 1]);
-	});
-
-	buttons[8].addEventListener("click", function()
-	{
-		buttonSound.play();
-		ufo.model.getShader().setColorMask([reds[8], greens[8], blues[8], 1]);
-	});
-
-	var customizedColors = {
-		red: reds[0],
-		green: greens[0],
-		blue: blues[0]
-	};
+    // TODO: Fix the bug where toggledButtonIndex is 0 when passed into the following line.
+	var customizedColors = {red: reds[toggledButtonIndex], green: greens[toggledButtonIndex], blue: blues[toggledButtonIndex]};
 
 	var confirmationButton = document.createElement("div");
 	confirmationButton.style.width = 4*buttonSize + "px";
@@ -197,6 +153,7 @@ var customization = function()
 	});
 
 	canvas.start();
+
 	var menuMusic = new Audio("src/sounds/music/Trouble on Mercury.mp3");
 	menuMusic.volume = 0.25;
 	menuMusic.play();

@@ -13,7 +13,6 @@ var main = function(area, customizedColors)
 	});
 
 	var ufo = new UFO(canvas);
-	// TODO: Fix the bug associated with customizedColors not being passed through correctly.
 	ufo.model.getShader().setColorMask([customizedColors.red, customizedColors.green, customizedColors.blue, 1]);
 
     var arena = new Arena(canvas, ufo);
