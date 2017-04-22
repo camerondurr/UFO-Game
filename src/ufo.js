@@ -123,7 +123,8 @@ UFO.prototype.control = function(isPressed)
     {
         this.speed.x -= Math.sin(this.orientation.y)*this.speedIntensity;
         this.speed.z -= Math.cos(this.orientation.y)*this.speedIntensity;
-        // TODO: Add tilting logic for when the UFO moves forward.
+        // TODO: Add correct tilting logic for when the UFO moves forward.
+        this.orientation.x -= this.speedIntensity;
     }
     // A Key
     if (isPressed[65])
@@ -137,7 +138,8 @@ UFO.prototype.control = function(isPressed)
     {
         this.speed.x += Math.sin(this.orientation.y)*this.speedIntensity;
         this.speed.z += Math.cos(this.orientation.y)*this.speedIntensity;
-        // TODO: Add tilting logic for when the UFO moves backward.
+        // TODO: Add correct tilting logic for when the UFO moves backward.
+        this.orientation.x += this.speedIntensity;
     }
     // D Key
     if (isPressed[68])
@@ -151,11 +153,13 @@ UFO.prototype.control = function(isPressed)
     if (isPressed[37])
     {
         this.orientation.y += this.spinIntensity;
+        this.orientation.z += this.speedIntensity;
     }
     // Right Arrow Key
     if (isPressed[39])
     {
         this.orientation.y -= this.spinIntensity;
+        this.orientation.z -= this.speedIntensity;
     }
 
     // Space Bar

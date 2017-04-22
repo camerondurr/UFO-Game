@@ -80,7 +80,7 @@ Bullet.prototype.testForCollisions = function(arena)
 				{
 					if (this.position.z < arena.obstaclesData[i].zHigh + this.diameter)
 					{
-						var thudSound = new Audio("Thud.wav");
+						var thudSound = new Audio("src/sounds/effects/Thud.wav");
 						thudSound.play();
 						this.isActive = false;
 					}
