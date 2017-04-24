@@ -21,7 +21,7 @@ var main = function(area, customizedColors)
 		isPressed[keyCode] = false;
 	});
 	
-	var my_color = [1, 1, 1, 1];
+	var my_color = [customizedColors.red, customizedColors.green, customizedColors.blue, 1];
 	var distance = function(p1, p2)
 	{
 		var dx = p1.x - p2.x;
