@@ -36,6 +36,7 @@ var UFO = function(canvas)
 	this.tiltLimit = 3.14/16;
 
     this.bullet = new Bullet(canvas, this);
+    this.lastTimeWeShotABullet = Number.MIN_VALUE;
 };
 
 // Methods
@@ -165,11 +166,32 @@ UFO.prototype.control = function(isPressed)
     // Space Bar
     if (isPressed[32])
     {
-        if (this.bullet.isActive === false)
+        if (this.ableToShootAgain() === true)
         {
             this.shoot(this.bullet);
         }
     }
+};
+UFO.prototype.ableToShootAgain = function()
+{
+	if (this.bullet.isActive === false)
+	{
+		var date = new Date();
+		var currentTime = date.getTime();
+		if (currentTime - this.lastTimeWeShotABullet >= 500)
+		{
+			this.lastTimeWeShotABullet = currentTime;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
 };
 UFO.prototype.shoot = function(bullet)
 {
@@ -218,50 +240,71 @@ UFO.prototype.animate = function()
 };
 UFO.prototype.testForCollisions = function(arena)
 {
+	var thudSound = new Audio("src/sounds/effects/Thud.wav");
     if (this.position.x < arena.westWallBoundary + this.widthOfMiddlePart/2)
     {
-        // TODO: Add Thud.
+	    thudSound.play();
         this.position.x = arena.westWallBoundary + this.widthOfMiddlePart/2;
-        this.speed.x = 0;
+	    this.speed.x = -this.speed.x;
     }
     else if (this.position.x > arena.eastWallBoundary - this.widthOfMiddlePart/2)
     {
-        // TODO: Add Thud.
+	    thudSound.play();
         this.position.x = arena.eastWallBoundary - this.widthOfMiddlePart/2;
-        this.speed.x = 0;
+	    this.speed.x = -this.speed.x;
     }
     if (this.position.z < arena.northWallBoundary + this.widthOfMiddlePart/2)
     {
-        // TODO: Add Thud.
+	    thudSound.play();
         this.position.z = arena.northWallBoundary + this.widthOfMiddlePart/2;
-        this.speed.z = 0;
+	    this.speed.z = -this.speed.z;
     }
     else if (this.position.z > arena.southWallBoundary - this.widthOfMiddlePart/2)
     {
-        // TODO: Add Thud.
+	    thudSound.play();
         this.position.z = arena.southWallBoundary - this.widthOfMiddlePart/2;
-        this.speed.z = 0;
+	    this.speed.z = -this.speed.z;
     }
 
     for (var i = 0; i < 15; i++)
     {
-        if (this.position.x > arena.obstacles[i].xLow - this.widthOfMiddlePart/2)
-        {
-            if (this.position.x < arena.obstacles[i].xHigh + this.widthOfMiddlePart/2)
-            {
-                if (this.position.z > arena.obstacles[i].zLow - this.widthOfMiddlePart/2)
-                {
-                    if (this.position.z < arena.obstacles[i].zHigh + this.widthOfMiddlePart/2)
-                    {
-                        // TODO: Keep the UFO from passing through the obstacles.
-                        this.speed.x = 0;
-                        this.speed.z = 0;
-                    }
-                }
-            }
-        }
+	    if (this.position.x >= arena.obstacles[i].xLow - this.widthOfMiddlePart/2 && this.position.x <= arena.obstacles[i].xLow)
+	    {
+		    if (this.position.z >= arena.obstacles[i].zLow && this.position.z <= arena.obstacles[i].zHigh)
+		    {
+			    thudSound.play();
+			    this.speed.x = -this.speed.x;
+			    this.position.x = arena.obstacles[i].xLow - this.widthOfMiddlePart/2;
+		    }
+	    }
+	    if (this.position.x <= arena.obstacles[i].xHigh + this.widthOfMiddlePart/2 && this.position.x >= arena.obstacles[i].xHigh)
+	    {
+		    if (this.position.z >= arena.obstacles[i].zLow && this.position.z <= arena.obstacles[i].zHigh)
+		    {
+			    thudSound.play();
+			    this.speed.x = -this.speed.x;
+			    this.position.x = arena.obstacles[i].xHigh + this.widthOfMiddlePart/2;
+		    }
+	    }
+	    if (this.position.z <= arena.obstacles[i].zHigh + this.widthOfMiddlePart/2 && this.position.z >= arena.obstacles[i].zHigh)
+	    {
+	    	if (this.position.x >= arena.obstacles[i].xLow && this.position.x <= arena.obstacles[i].xHigh)
+		    {
+			    thudSound.play();
+		    	this.speed.z = -this.speed.z;
+		    	this.position.z = arena.obstacles[i].zHigh + this.widthOfMiddlePart/2;
+		    }
+	    }
+	    if (this.position.z >= arena.obstacles[i].zLow - this.widthOfMiddlePart/2 && this.position.z <= arena.obstacles[i].zLow)
+	    {
+	    	if (this.position.x >= arena.obstacles[i].xLow && this.position.x <= arena.obstacles[i].xHigh)
+		    {
+			    thudSound.play();
+		    	this.speed.z = -this.speed.z;
+		    	this.position.z = arena.obstacles[i].zLow - this.widthOfMiddlePart/2;
+		    }
+	    }
     }
-
     this.bullet.testForCollisions(arena);
 };
 

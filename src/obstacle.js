@@ -41,6 +41,7 @@ var Obstacle = function(canvas, arena)
 
     this.xLow = randomX - randomWidth/2;
     this.xHigh = randomX + randomWidth/2;
+    
     this.zLow = randomZ - randomDepth/2;
     this.zHigh = randomZ + randomDepth/2;
 };

@@ -22,15 +22,7 @@ var main = function(area, customizedColors)
 	});
 	
 	var my_color = [customizedColors.red, customizedColors.green, customizedColors.blue, 1];
-	var distance = function(p1, p2)
-	{
-		var dx = p1.x - p2.x;
-		var dy = p1.y - p2.y;
-		var dz = p1.z - p2.z;
-		return dx*dx + dy*dy + dz*dz;
-	};
 	
-	// HERE WE ANIMATE THE SCENE
 	canvas.whenAnimate().then(function()
 	{
 		if (my_session == null)
@@ -45,32 +37,35 @@ var main = function(area, customizedColors)
 			decimals: 2,
 			skip: 10
 		});
+		
 		var users = my_session.getUsers();
 		for (var i in users)
 		{
 			if (users [i] != me && users [i].p)
 			{
-				users [i].variable('p').interpolate(10);
-				// Check if we collide with this user:
-				if (distance(ufo.position, {
-						x: users [i].p [0],
-						y: users [i].p [1],
-						z: users [i].p [2]
-					}) < 0.5)
+				users[i].variable('p').interpolate(10);
+				
+				var opponentPosition = {
+					x: users[i].p[0],
+					y: users[i].p[1],
+					z: users[i].p[2]
+				}
+				if (distance(ufo.position, opponentPosition) < 2*ufo.widthOfMiddlePart)
 				{
-					users [i].p [0] += ufo.speed.x;
-					users [i].p [2] += ufo.speed.z;
-					users [i].variable('p').broadcast({skip: 10});
-					users [i].variable('color').broadcast({skip: 10});
+					users[i].p[0] += 2*ufo.speed.x;
+					users[i].p[2] += 2*ufo.speed.z;
+					ufo.speed.x = -ufo.speed.x;
+					ufo.speed.z = -ufo.speed.z;
+					
+					users[i].variable('p').broadcast({skip: 10});
+					users[i].variable('color').broadcast({skip: 10});
 				}
 			}
 		}
-		
 		ufo.animate();
 		ufo.testForCollisions(arena);
 	});
 	
-	// Draw
 	canvas.whenDraw().then(function()
 	{
 		if (my_session == null)
@@ -83,10 +78,8 @@ var main = function(area, customizedColors)
 		p.rotateY(-ufo.orientation.y);
 		p.translate([-ufo.position.x, -ufo.position.y, -ufo.position.z]);
 		
-		// Arena
 		arena.draw();
 		
-		// Users
 		var users = my_session.getUsers();
 		for (var i in users)
 		{
@@ -99,6 +92,7 @@ var main = function(area, customizedColors)
 				p.rotateX(pos[3]);
 				p.rotateY(pos[4]);
 				p.rotateZ(pos[5]);
+				
 				if (users[i].color)
 				{
 					ufo.model.getShader().setColorMask(users[i].color);
@@ -110,16 +104,19 @@ var main = function(area, customizedColors)
 				var texture = new GLTexture(canvas);
 				texture.text({text: i, color: 'white', font: '40px Arial', width: 128, height: 128});
 				ufo.label.setTexture(texture);
+				
 				ufo.draw();
 				
 				p.popMatrix();
 			}
-			// Draw Bullets
+			
 			if (ufo.bullet.isActive)
 			{
 				p.pushMatrix();
+				
 				p.translate([ufo.bullet.position.x, ufo.bullet.position.y, ufo.bullet.position.z]);
 				ufo.bullet.draw();
+				
 				p.popMatrix();
 			}
 		}
@@ -135,7 +132,6 @@ var main = function(area, customizedColors)
 	
 	canvas.start();
 	
-	// Here we establish the connection
 	var my_session = null;
 	var me = null;
 	var server = null;
@@ -168,12 +164,12 @@ var main = function(area, customizedColors)
 			{
 				if (event.initiator != me)
 				{
-					ufo.position.x = me.p [0];
-					ufo.position.y = me.p [1];
-					ufo.position.z = me.p [2];
-					ufo.orientation.x = me.p [3];
-					ufo.orientation.y = me.p [4];
-					ufo.orientation.z = me.p [5];
+					ufo.position.x = me.p[0];
+					ufo.position.y = me.p[1];
+					ufo.position.z = me.p[2];
+					ufo.orientation.x = me.p[3];
+					ufo.orientation.y = me.p[4];
+					ufo.orientation.z = me.p[5];
 				}
 			});
 			vn.getWindowManager().createNotification('You are now connected!');
@@ -190,4 +186,12 @@ var main = function(area, customizedColors)
 var drawHud = function(area)
 {
 	var hud = new HUD(area);
+};
+
+var distance = function(p1, p2)
+{
+	var dx = p1.x - p2.x;
+	var dy = p1.y - p2.y;
+	var dz = p1.z - p2.z;
+	return dx*dx + dy*dy + dz*dz;
 };
