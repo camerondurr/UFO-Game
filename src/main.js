@@ -41,7 +41,6 @@ var main = function(area, customizedColors)
 		ufo.control(isPressed);
 		
 		me.p = [ufo.position.x, ufo.position.y, ufo.position.z, ufo.orientation.x, ufo.orientation.y, ufo.orientation.z];
-		// TODO: Uncomment this and fix it.
 		me.variable('p').broadcast({
 			decimals: 2,
 			skip: 10
@@ -110,7 +109,7 @@ var main = function(area, customizedColors)
 				}
 				var texture = new GLTexture(canvas);
 				// TODO: Change the text field to be a variable that's based on the player's number in the lobby.
-				texture.text({text: "1", color: 'white', font: '40px Arial', width: 128, height: 128});
+				texture.text({text: i, color: 'white', font: '40px Arial', width: 128, height: 128});
 				ufo.label.setTexture(texture);
 				ufo.draw();
 				
