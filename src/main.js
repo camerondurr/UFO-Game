@@ -108,7 +108,6 @@ var main = function(area, customizedColors)
 					ufo.model.getShader().setColorMask([1, 1, 1, 1]);
 				}
 				var texture = new GLTexture(canvas);
-				// TODO: Change the text field to be a variable that's based on the player's number in the lobby.
 				texture.text({text: i, color: 'white', font: '40px Arial', width: 128, height: 128});
 				ufo.label.setTexture(texture);
 				ufo.draw();
