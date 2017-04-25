@@ -86,7 +86,6 @@ var customization = function()
 	}
 
 	var toggledButtonIndex = 0;
-	// TODO: Fix the bug where customizedColors isn't correctly passed into main.
 	var customizedColors = {red: reds[toggledButtonIndex], green: greens[toggledButtonIndex], blue: blues[toggledButtonIndex]};
 	for (var i = 0; i < 9; i++)
     {
