@@ -46,7 +46,7 @@ var main = function(area, customizedColors)
 		var users = my_session.getUsers();
 		for (var i in users)
 		{
-			if (users[i] !== me && users [i].p)
+			if (users[i] !== me && users[i].p)
 			{
 				users[i].variable('p').interpolate(10);
 				
@@ -64,6 +64,27 @@ var main = function(area, customizedColors)
 					
 					users[i].variable('p').broadcast({skip: 10});
 					users[i].variable('color').broadcast({skip: 10});
+				}
+			}
+			if (users[i] !== me && users[i].b)
+			{
+				users[i].variable('b').interpolate(10);
+				
+				var opponentBulletPosition = {
+					x: users[i].b[0],
+					y: users[i].b[1],
+					z: users[i].b[2]
+				};
+				if (distance(ufo.position, opponentBulletPosition) < 2*(ufo.widthOfMiddlePart/2 + ufo.bullet.diameter/2))
+				{
+					// TODO: Decrement armor and lives.
+					
+					var clangSound = new Audio("src/sounds/effects/Clang.wav");
+					clangSound.play();
+					
+					users[i].bulletIsActive = false;
+					
+					users[i].variable('b').broadcast({skip: 10});
 				}
 			}
 		}
@@ -199,6 +220,13 @@ var main = function(area, customizedColors)
 					ufo.bullet.position.x = me.b[0];
 					ufo.bullet.position.y = me.b[1];
 					ufo.bullet.position.z = me.b[2];
+				}
+			});
+			me.variable('bulletIsActive').whenValueChanged().then(function(event)
+			{
+				if (event.initiator !== me)
+				{
+					ufo.bullet.isActive = me.bulletIsActive;
 				}
 			});
 			vn.getWindowManager().createNotification('You are now connected!');
