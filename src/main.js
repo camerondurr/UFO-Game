@@ -67,8 +67,11 @@ var main = function(area, customizedColors)
 				}
 			}
 		}
+		
 		ufo.animate();
+		
 		ufo.testForCollisions(arena);
+		me.bulletIsActive = ufo.bullet.isActive;
 	});
 	
 	canvas.whenDraw().then(function()
@@ -124,7 +127,7 @@ var main = function(area, customizedColors)
 			}
 			
 			var bPos = users[i].b;
-			if (bPos && users[i].bulletIsActive === true)
+			if (users[i].bulletIsActive === true)
 			{
 				p.pushMatrix();
 				
@@ -188,7 +191,7 @@ var main = function(area, customizedColors)
 					ufo.orientation.z = me.p[5];
 				}
 			});
-			me.bulletIsActive = false;
+			me.bulletIsActive = ufo.bullet.isActive;
 			me.variable('b').whenValueChanged().then(function(event)
 			{
 				if (event.initiator !== me)
