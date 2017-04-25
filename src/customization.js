@@ -86,19 +86,19 @@ var customization = function()
 	}
 
 	var toggledButtonIndex = 0;
+	// TODO: Fix the bug where customizedColors isn't correctly passed into main.
+	var customizedColors = {red: reds[toggledButtonIndex], green: greens[toggledButtonIndex], blue: blues[toggledButtonIndex]};
 	for (var i = 0; i < 9; i++)
     {
         buttons[i].addEventListener("click", function()
         {
             buttonSound.play();
 
-            toggledButtonIndex = Math.round(event.screenY/buttonSize) - 3;
+            toggledButtonIndex = Math.ceil((event.screenY - (buttonSize + 2))/buttonSize) - 3;
+	        customizedColors = {red: reds[toggledButtonIndex], green: greens[toggledButtonIndex], blue: blues[toggledButtonIndex]};
             ufo.model.getShader().setColorMask([reds[toggledButtonIndex], greens[toggledButtonIndex], blues[toggledButtonIndex], 1]);
         });
     }
-
-    // TODO: Fix the bug where toggledButtonIndex is 0 when passed into the following line.
-	var customizedColors = {red: reds[toggledButtonIndex], green: greens[toggledButtonIndex], blue: blues[toggledButtonIndex]};
 
 	var confirmationButton = document.createElement("div");
 
