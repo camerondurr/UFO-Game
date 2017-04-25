@@ -49,24 +49,25 @@ Bullet.prototype.draw = function()
 
 Bullet.prototype.testForCollisions = function(arena)
 {
+	var thudSound = new Audio("src/sounds/effects/Thud.wav");
 	if (this.position.x < arena.westWallBoundary + this.diameter/2)
 	{
-		// TODO: Add Thud.
+		// TODO: Add working Thud.
 		this.isActive = false;
 	}
 	if (this.position.x > arena.eastWallBoundary - this.diameter/2)
     {
-        // TODO: Add Thud.
+	    // TODO: Add working Thud.
         this.isActive = false;
     }
 	if (this.position.z < arena.northWallBoundary + this.diameter/2)
 	{
-		// TODO: Add Thud.
+		// TODO: Add working Thud.
 		this.isActive = false;
 	}
 	if (this.position.z > arena.southWallBoundary - this.diameter/2)
     {
-        // TODO: Add Thud.
+	    // TODO: Add working Thud.
         this.isActive = false;
     }
 
@@ -80,7 +81,6 @@ Bullet.prototype.testForCollisions = function(arena)
 				{
 					if (this.position.z < arena.obstacles[i].zHigh + this.diameter)
 					{
-						var thudSound = new Audio("src/sounds/effects/Thud.wav");
 						thudSound.play();
 						this.isActive = false;
 					}

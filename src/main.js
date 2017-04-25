@@ -37,11 +37,16 @@ var main = function(area, customizedColors)
 			decimals: 2,
 			skip: 10
 		});
+		me.b = [ufo.bullet.position.x, ufo.bullet.position.y, ufo.bullet.position.z];
+		me.variable('b').broadcast({
+			decimals: 2,
+			skip: 10
+		});
 		
 		var users = my_session.getUsers();
 		for (var i in users)
 		{
-			if (users [i] != me && users [i].p)
+			if (users[i] !== me && users [i].p)
 			{
 				users[i].variable('p').interpolate(10);
 				
@@ -49,7 +54,7 @@ var main = function(area, customizedColors)
 					x: users[i].p[0],
 					y: users[i].p[1],
 					z: users[i].p[2]
-				}
+				};
 				if (distance(ufo.position, opponentPosition) < 2*ufo.widthOfMiddlePart)
 				{
 					users[i].p[0] += 2*ufo.speed.x;
@@ -83,6 +88,14 @@ var main = function(area, customizedColors)
 		var users = my_session.getUsers();
 		for (var i in users)
 		{
+			if (users[i].isSpawned === false)
+			{
+				users[i].isSpawned = true;
+				ufo.position.x = -Math.sin((i - 1)*(3.14/2))*(arena.lengthOfBoard/2 - ufo.widthOfMiddlePart/2);
+				ufo.position.z = Math.cos((i - 1)*(3.14/2))*(arena.lengthOfBoard/2 - ufo.widthOfMiddlePart/2);
+				ufo.orientation.y = -(i - 1)*(3.14/2);
+			}
+			
 			var pos = users[i].p;
 			if (pos)
 			{
@@ -110,11 +123,12 @@ var main = function(area, customizedColors)
 				p.popMatrix();
 			}
 			
-			if (ufo.bullet.isActive)
+			var bPos = users[i].b;
+			if (bPos && users[i].bulletIsActive === true)
 			{
 				p.pushMatrix();
 				
-				p.translate([ufo.bullet.position.x, ufo.bullet.position.y, ufo.bullet.position.z]);
+				p.translate([bPos[0], bPos[1], bPos[2]]);
 				ufo.bullet.draw();
 				
 				p.popMatrix();
@@ -150,7 +164,7 @@ var main = function(area, customizedColors)
 				init_rt();
 			}
 		});
-		server.connect('Horse Game',
+		server.connect('UFO Game',
 			{
 				capacity: 4,
 				releaseSeats: true
@@ -160,9 +174,11 @@ var main = function(area, customizedColors)
 			me = server.me();
 			me.color = my_color;
 			me.variable('color').broadcast();
+			me.isSpawned = false;
+			me.variable('isSpawned').broadcast();
 			me.variable('p').whenValueChanged().then(function(event)
 			{
-				if (event.initiator != me)
+				if (event.initiator !== me)
 				{
 					ufo.position.x = me.p[0];
 					ufo.position.y = me.p[1];
@@ -170,6 +186,16 @@ var main = function(area, customizedColors)
 					ufo.orientation.x = me.p[3];
 					ufo.orientation.y = me.p[4];
 					ufo.orientation.z = me.p[5];
+				}
+			});
+			me.bulletIsActive = false;
+			me.variable('b').whenValueChanged().then(function(event)
+			{
+				if (event.initiator !== me)
+				{
+					ufo.bullet.position.x = me.b[0];
+					ufo.bullet.position.y = me.b[1];
+					ufo.bullet.position.z = me.b[2];
 				}
 			});
 			vn.getWindowManager().createNotification('You are now connected!');
