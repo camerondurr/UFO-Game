@@ -10,26 +10,40 @@ var Obstacle = function(canvas, arena)
     while (true)
     {
         maker.identity();
-        randomX = -arena.lengthOfBoard/2 + 2 + Math.random()*(arena.lengthOfBoard - 4);
-        randomZ = -arena.lengthOfBoard/2 + 2 + Math.random()*(arena.lengthOfBoard - 4);
+        
+	    randomWidth = Math.random() + 1; // Random number from 1 to 2.
+	    randomDepth = Math.random() + 1; // Random number from 1 to 2.
+	    
+	    var maximumX = arena.lengthOfBoard/2 - (arena.ufo.widthOfMiddlePart + randomWidth/2);
+	    var minimumX = -arena.lengthOfBoard/2 + (arena.ufo.widthOfMiddlePart + randomWidth/2);
+	    
+	    var maximumZ = arena.lengthOfBoard/2 - (arena.ufo.widthOfMiddlePart + randomDepth/2);
+	    var minimumZ = -arena.lengthOfBoard/2 + (arena.ufo.widthOfMiddlePart + randomDepth/2);
+	    
+        randomX = Math.random()*(maximumX - minimumX) + minimumX;
+        randomZ = Math.random()*(maximumZ - minimumZ) + minimumZ;
+        
         maker.translate([randomX, 0.5, randomZ]);
         maker.color([1, 1, 1]);
-        randomWidth = Math.random() + 1;
-        randomDepth = Math.random() + 1;
-        if (!randomX - randomWidth/2 < arena.ufo.widthOfMiddlePart/2)
+        
+        if (randomX - randomWidth < arena.ufo.widthOfMiddlePart/2)
         {
-            if (!randomX + randomWidth/2 > -arena.ufo.widthOfMiddlePart/2)
-            {
-                if (!randomZ - randomDepth/2 < arena.ufo.widthOfMiddlePart/2)
-                {
-                    if (!randomZ + randomDepth/2 > -arena.ufo.widthOfMiddlePart/2)
-                    {
-                        break;
-                    }
-                }
-            }
+            break;
+        }
+        if (randomX + randomWidth > -arena.ufo.widthOfMiddlePart/2)
+        {
+        	break;
+        }
+        if (randomZ - randomDepth < arena.ufo.widthOfMiddlePart/2)
+        {
+        	break;
+        }
+        if (randomZ + randomDepth > -arena.ufo.widthOfMiddlePart/2)
+        {
+        	break;
         }
     }
+    
     maker.box({
         width: randomWidth,
         height: 1,
