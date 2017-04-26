@@ -86,14 +86,14 @@ var customization = function()
 	}
 
 	var toggledButtonIndex = 0;
-	var customizedColors = {red: reds[toggledButtonIndex], green: greens[toggledButtonIndex], blue: blues[toggledButtonIndex]};
+	var customizedColors = {red: 1, green: 1, blue: 1};
 	for (var i = 0; i < 9; i++)
     {
         buttons[i].addEventListener("click", function()
         {
             buttonSound.play();
 
-            toggledButtonIndex = Math.ceil((event.screenY - (buttonSize + 2))/buttonSize) - 3;
+            toggledButtonIndex = Math.floor(event.clientY/buttonSize) - 1;
 	        customizedColors = {red: reds[toggledButtonIndex], green: greens[toggledButtonIndex], blue: blues[toggledButtonIndex]};
             ufo.model.getShader().setColorMask([reds[toggledButtonIndex], greens[toggledButtonIndex], blues[toggledButtonIndex], 1]);
         });

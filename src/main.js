@@ -141,6 +141,12 @@ var main = function(area, customizedColors)
 			}
 			
 			var bulletPosition = users[i].b;
+			
+			// TODO: Fix the bug where users[i].b is undefined.
+			// console.log("User " + i + " b: " + users[i].b[0] + ", " + users[i].b[1] + ", " + users[i].b[2]);
+			
+			// TODO: Fix the bug where users[i].bulletIsActive is undefined.
+			// console.log("User " + i + " bulletIsActive: " + users[i].bulletIsActive);
 			if (users[i].bulletIsActive === true)
 			{
 				p.pushMatrix();
