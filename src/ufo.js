@@ -37,6 +37,9 @@ var UFO = function(canvas)
 
     this.bullet = new Bullet(canvas, this);
     this.lastTimeWeShotABullet = Number.MIN_VALUE;
+    
+    this.armor = 3;
+    this.lives = 3;
 };
 
 // Methods

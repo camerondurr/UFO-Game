@@ -77,10 +77,34 @@ var main = function(area, customizedColors)
 				};
 				if (distance(ufo.position, opponentBulletPosition) < 2*(ufo.widthOfMiddlePart/2 + ufo.bullet.diameter/2))
 				{
-					// TODO: Decrement armor and lives.
+					ufo.armor--;
+					if (ufo.armor === 0)
+					{
+						var livesDiv = document.getElementById("lives");
+						ufo.lives--;
+						if (ufo.lives === 0)
+						{
+							// TODO: "Eliminate" this Player from the game.
+							livesDiv.removeChild(document.getElementById("2 life"));
+						}
+						else
+						{
+							if (ufo.lives === 2)
+							{
+								livesDiv.removeChild(document.getElementById("0 life"));
+							}
+							else if (ufo.lives === 1)
+							{
+								livesDiv.removeChild(document.getElementById("1 life"));
+							}
+							ufo.armor = 3;
+						}
+					}
 					
 					var clangSound = new Audio("src/sounds/effects/Clang.wav");
 					clangSound.play();
+					
+					console.log("Armor: " + ufo.armor + ", Lives: " + ufo.lives);
 					
 					users[i].bulletIsActive = false;
 					

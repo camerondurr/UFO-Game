@@ -10,6 +10,7 @@ var HUD = function(area)
 	lives.style.top = lifeSize/2 + "px";
 	lives.style.position = "absolute";
 	lives.style.border = "1px dashed red";
+	lives.id = "lives";
 
 	for (var i = 0; i < 3; i++)
 	{
@@ -21,6 +22,7 @@ var HUD = function(area)
 		life.style.position = "absolute";
 		life.style.backgroundColor = "red";
 		life.style.borderRadius = "100%";
+		life.id = i + " life";
 
 		lives.appendChild(life);
 	}
