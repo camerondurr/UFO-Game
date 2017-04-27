@@ -128,7 +128,8 @@ UFO.prototype.control = function(isPressed)
         this.speed.x -= Math.sin(this.orientation.y)*this.speedIntensity;
         this.speed.z -= Math.cos(this.orientation.y)*this.speedIntensity;
         
-        this.orientation.x -= this.speedIntensity;
+	    // TODO: Fix the tilting.
+        // this.orientation.x -= this.speedIntensity;
     }
 	// S Key / Down Key
 	if (isPressed[40] || isPressed[83])
@@ -136,7 +137,8 @@ UFO.prototype.control = function(isPressed)
 		this.speed.x += Math.sin(this.orientation.y)*this.speedIntensity;
 		this.speed.z += Math.cos(this.orientation.y)*this.speedIntensity;
 		
-		this.orientation.x += this.speedIntensity;
+		// TODO: Fix the tilting.
+		// this.orientation.x += this.speedIntensity;
 	}
     // A Key
     if (isPressed[65])
