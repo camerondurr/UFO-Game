@@ -23,6 +23,7 @@ var main = function(area, customizedColors)
 	
 	var myColor = [customizedColors.red, customizedColors.green, customizedColors.blue, 1];
 	
+	// Animate
 	canvas.whenAnimate().then(function()
 	{
 		if (mySession == null)
@@ -46,6 +47,7 @@ var main = function(area, customizedColors)
 		var users = mySession.getUsers();
 		for (var i in users)
 		{
+			// Player Position
 			if (users[i] != me && users[i].p)
 			{
 				users[i].variable('p').interpolate(10);
@@ -67,6 +69,7 @@ var main = function(area, customizedColors)
 				}
 			}
 			
+			// Bullet Position
 			if (users[i] != me && users[i].b)
 			{
 				users[i].variable('b').interpolate(10);
@@ -76,20 +79,19 @@ var main = function(area, customizedColors)
 					z: users[i].b[2]
 				};
 				
-				if (distance(ufo.position, opponentBulletPosition) < 2*ufo.widthOfMiddlePart)
+				// Bullet-Player Collision
+				if (distance(ufo.position, opponentBulletPosition) < ufo.widthOfMiddlePart/2)
 				{
 					ufo.armor--;
 					if (ufo.armor === 0)
 					{
-						var livesDiv = document.getElementById("lives");
 						ufo.lives--;
+						
+						var livesDiv = document.getElementById("lives");
 						if (ufo.lives === 0)
 						{
 							livesDiv.removeChild(document.getElementById("2 life"));
 							
-							
-							
-							// TODO: "Eliminate" this Player from the game.
 							var gameOverMessage = document.createElement("div");
 							gameOverMessage.style.width = "100px";
 							gameOverMessage.style.height = "50px";
@@ -118,17 +120,16 @@ var main = function(area, customizedColors)
 							{
 								livesDiv.removeChild(document.getElementById("1 life"));
 							}
-							ufo.armor = 3;
+							
+							// Respawn
 							users[i].isSpawned = false;
+							// Replenish Armor
+							ufo.armor = 3;
 						}
 					}
 					
 					var clangSound = new Audio("src/sounds/effects/Clang.wav");
 					clangSound.play();
-					
-					users[i].bulletIsActive = false;
-					
-					users[i].variable('b').broadcast({skip: 10});
 				}
 				
 				var opponentPosition = {
@@ -137,12 +138,11 @@ var main = function(area, customizedColors)
 					z: users[i].p[2]
 				};
 				
-				if (distance(ufo.bullet.position, opponentPosition) < 2*ufo.widthOfMiddlePart)
+				if (distance(ufo.bullet.position, opponentPosition) < ufo.widthOfMiddlePart/2)
 				{
 					var clangSound = new Audio("src/sounds/effects/Clang.wav");
 					clangSound.play();
 					
-					me.bulletIsActive = false;
 					ufo.bullet.isActive = false;
 				}
 			}
@@ -154,6 +154,7 @@ var main = function(area, customizedColors)
 		me.bulletIsActive = ufo.bullet.isActive;
 	});
 	
+	// Draw
 	canvas.whenDraw().then(function()
 	{
 		if (mySession == null)
@@ -163,23 +164,26 @@ var main = function(area, customizedColors)
 		
 		var p = canvas.getPrinter();
 		p.translate([0, -1.5, -4]);
+		
 		p.rotateY(-ufo.orientation.y);
 		p.translate([-ufo.position.x, -ufo.position.y, -ufo.position.z]);
-		
 		arena.draw();
 		
+		// Players
 		var users = mySession.getUsers();
 		for (var i in users)
 		{
-			// If the Player is spawning...
+			// Spawning
 			if (users[i].isSpawned == false)
 			{
-				users[i].isSpawned = true;
 				ufo.position.x = -Math.sin((i - 1)*(3.14/2))*(arena.lengthOfBoard/2 - ufo.widthOfMiddlePart/2);
 				ufo.position.z = Math.cos((i - 1)*(3.14/2))*(arena.lengthOfBoard/2 - ufo.widthOfMiddlePart/2);
 				ufo.orientation.y = -(i - 1)*(3.14/2);
+				
+				users[i].isSpawned = true;
 			}
 			
+			// UFOs
 			var ufoPosition = users[i].p;
 			if (ufoPosition)
 			{
@@ -190,6 +194,7 @@ var main = function(area, customizedColors)
 				p.rotateY(ufoPosition[4]);
 				p.rotateZ(ufoPosition[5]);
 				
+				// Player Color
 				if (users[i].color)
 				{
 					ufo.model.getShader().setColorMask(users[i].color);
@@ -198,6 +203,8 @@ var main = function(area, customizedColors)
 				{
 					ufo.model.getShader().setColorMask([1, 1, 1, 1]);
 				}
+				
+				// Player Label
 				var texture = new GLTexture(canvas);
 				texture.text({text: i, color: 'white', font: '40px Arial', width: 128, height: 128});
 				ufo.label.setTexture(texture);
@@ -207,12 +214,9 @@ var main = function(area, customizedColors)
 				p.popMatrix();
 			}
 			
+			// Bullets
 			var bulletPosition = users[i].b;
-			// TODO: Fix the bug where users[i].b is undefined.
-			// console.log("User " + i + " b: " + users[i].b[0] + ", " + users[i].b[1] + ", " + users[i].b[2]);
-			// TODO: Fix the bug where users[i].bulletIsActive is undefined.
-			// console.log("User " + i + " bulletIsActive: " + users[i].bulletIsActive);
-			if (users[i].bulletIsActive == true)
+			if (users[i].bulletIsActive)
 			{
 				p.pushMatrix();
 				
@@ -234,6 +238,7 @@ var main = function(area, customizedColors)
 	
 	canvas.start();
 	
+	// Network
 	var mySession = null;
 	var me = null;
 	var server = null;
@@ -260,10 +265,13 @@ var main = function(area, customizedColors)
 		{
 			mySession = session;
 			me = server.me();
+			
 			me.color = myColor;
 			me.variable('color').broadcast();
+			
 			me.isSpawned = false;
 			me.variable('isSpawned').broadcast();
+			
 			me.variable('p').whenValueChanged().then(function(event)
 			{
 				if (event.initiator != me)
@@ -276,6 +284,7 @@ var main = function(area, customizedColors)
 					ufo.orientation.z = me.p[5];
 				}
 			});
+			
 			me.bulletIsActive = ufo.bullet.isActive;
 			me.variable('b').whenValueChanged().then(function(event)
 			{
@@ -286,13 +295,7 @@ var main = function(area, customizedColors)
 					ufo.bullet.position.z = me.b[2];
 				}
 			});
-			me.variable('bulletIsActive').whenValueChanged().then(function(event)
-			{
-				if (event.initiator != me)
-				{
-					ufo.bullet.isActive = me.bulletIsActive;
-				}
-			});
+			
 			me.armor = ufo.armor;
 			me.lives = ufo.lives;
 			
