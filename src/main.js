@@ -85,8 +85,28 @@ var main = function(area, customizedColors)
 						ufo.lives--;
 						if (ufo.lives === 0)
 						{
-							// TODO: "Eliminate" this Player from the game.
 							livesDiv.removeChild(document.getElementById("2 life"));
+							
+							
+							
+							// TODO: "Eliminate" this Player from the game.
+							var gameOverMessage = document.createElement("div");
+							gameOverMessage.style.width = "100px";
+							gameOverMessage.style.height = "50px";
+							gameOverMessage.align = "center";
+							gameOverMessage.style.lineHeight = "50px";
+							gameOverMessage.style.top = "50%";
+							gameOverMessage.style.left = "50%";
+							gameOverMessage.style.marginTop = "-25px";
+							gameOverMessage.style.marginLeft = "-50px";
+							gameOverMessage.style.position = "absolute";
+							gameOverMessage.style.backgroundColor = "black";
+							gameOverMessage.style.color = "green";
+							gameOverMessage.style.fontFamily = "monospace";
+							gameOverMessage.style.fontSize = "16px";
+							gameOverMessage.innerHTML = "GAME OVER";
+							
+							area.appendChild(gameOverMessage);
 						}
 						else
 						{
