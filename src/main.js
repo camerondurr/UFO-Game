@@ -25,7 +25,7 @@ var main = function(area, customizedColors)
 	
 	canvas.whenAnimate().then(function()
 	{
-		if (my_session == null)
+		if (mySession == null)
 		{
 			return;
 		}
@@ -43,7 +43,7 @@ var main = function(area, customizedColors)
 			skip: 10
 		});
 		
-		var users = my_session.getUsers();
+		var users = mySession.getUsers();
 		for (var i in users)
 		{
 			if (users[i] != me && users[i].p)
@@ -65,16 +65,47 @@ var main = function(area, customizedColors)
 					
 					users[i].variable('p').broadcast({skip: 10});
 				}
-				// Bullet-Player Collision
-				if (distance(ufo.bullet.position, opponentPosition) < 2*(ufo.widthOfMiddlePart/2 + ufo.bullet.diameter/2))
+			}
+			
+			if (users[i] != me && users[i].b)
+			{
+				users[i].variable('b').interpolate(10);
+				var opponentBulletPosition = {
+					x: users[i].b[0],
+					y: users[i].b[1],
+					z: users[i].b[2]
+				};
+				
+				if (distance(ufo.position, opponentBulletPosition) < 2*(ufo.widthOfMiddlePart/2 + ufo.bullet.diameter/2))
 				{
-					users[i].armor--;
+					ufo.armor--;
+					if (ufo.armor === 0)
+					{
+						var livesDiv = document.getElementById("lives");
+						ufo.lives--;
+						if (ufo.lives === 0)
+						{
+							// TODO: "Eliminate" this Player from the game.
+							livesDiv.removeChild(document.getElementById("2 life"));
+						}
+						else
+						{
+							if (ufo.lives === 2)
+							{
+								livesDiv.removeChild(document.getElementById("0 life"));
+							}
+							else if (ufo.lives === 1)
+							{
+								livesDiv.removeChild(document.getElementById("1 life"));
+							}
+							ufo.armor = 3;
+						}
+					}
+					
 					var clangSound = new Audio("src/sounds/effects/Clang.wav");
 					clangSound.play();
 					
-					// TODO: The Bullet should not pass through the other UFO.
-					me.bulletIsActive = false;
-					ufo.bullet.isActive = false;
+					users[i].bulletIsActive = false;
 					
 					users[i].variable('b').broadcast({skip: 10});
 				}
@@ -89,7 +120,7 @@ var main = function(area, customizedColors)
 	
 	canvas.whenDraw().then(function()
 	{
-		if (my_session == null)
+		if (mySession == null)
 		{
 			return;
 		}
@@ -101,7 +132,7 @@ var main = function(area, customizedColors)
 		
 		arena.draw();
 		
-		var users = my_session.getUsers();
+		var users = mySession.getUsers();
 		for (var i in users)
 		{
 			// If the Player is spawning...
@@ -141,10 +172,8 @@ var main = function(area, customizedColors)
 			}
 			
 			var bulletPosition = users[i].b;
-			
 			// TODO: Fix the bug where users[i].b is undefined.
 			// console.log("User " + i + " b: " + users[i].b[0] + ", " + users[i].b[1] + ", " + users[i].b[2]);
-			
 			// TODO: Fix the bug where users[i].bulletIsActive is undefined.
 			// console.log("User " + i + " bulletIsActive: " + users[i].bulletIsActive);
 			if (users[i].bulletIsActive == true)
@@ -169,13 +198,13 @@ var main = function(area, customizedColors)
 	
 	canvas.start();
 	
-	var my_session = null;
+	var mySession = null;
 	var me = null;
 	var server = null;
 	
 	var init_rt = function()
 	{
-		my_session = null;
+		mySession = null;
 		me = null;
 		server = new VNServer();
 		server.whenConnected().otherwise(function(s)
@@ -193,7 +222,7 @@ var main = function(area, customizedColors)
 				releaseSeats: true
 			}).then(function(session)
 		{
-			my_session = session;
+			mySession = session;
 			me = server.me();
 			me.color = myColor;
 			me.variable('color').broadcast();
@@ -230,35 +259,6 @@ var main = function(area, customizedColors)
 			});
 			me.armor = ufo.armor;
 			me.lives = ufo.lives;
-			me.variable('armor').whenValueChanged().then(function(event)
-			{
-				if (event.initiator !== me)
-				{
-					ufo.armor--;
-					if (ufo.armor == 0)
-					{
-						var livesDiv = document.getElementById("lives");
-						ufo.lives--;
-						if (ufo.lives == 0)
-						{
-							livesDiv.removeChild(document.getElementById("2 life"));
-							// TODO: Eliminate this Player from the game.
-						}
-						else
-						{
-							if (ufo.lives == 2)
-							{
-								livesDiv.removeChild(document.getElementById("0 life"));
-							}
-							else if (ufo.lives == 1)
-							{
-								livesDiv.removeChild(document.getElementById("1 life"));
-							}
-							ufo.armor = 3;
-						}
-					}
-				}
-			});
 			
 			vn.getWindowManager().createNotification('You are now connected!');
 		});
