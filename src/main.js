@@ -4,10 +4,10 @@ var main = function(area, customizedColors)
 	{
 		area.removeChild(area.firstChild);
 	}
+	
 	var canvas = new GLCanvas(area);
 	
 	drawHud(area);
-	
 	var ufo = new UFO(canvas);
 	var arena = new Arena(canvas, ufo);
 	
@@ -21,7 +21,7 @@ var main = function(area, customizedColors)
 		isPressed[keyCode] = false;
 	});
 	
-	var my_color = [customizedColors.red, customizedColors.green, customizedColors.blue, 1];
+	var myColor = [customizedColors.red, customizedColors.green, customizedColors.blue, 1];
 	
 	canvas.whenAnimate().then(function()
 	{
@@ -46,7 +46,7 @@ var main = function(area, customizedColors)
 		var users = my_session.getUsers();
 		for (var i in users)
 		{
-			if (users[i] !== me && users[i].p)
+			if (users[i] != me && users[i].p)
 			{
 				users[i].variable('p').interpolate(10);
 				var opponentPosition = {
@@ -105,7 +105,7 @@ var main = function(area, customizedColors)
 		for (var i in users)
 		{
 			// If the Player is spawning...
-			if (users[i].isSpawned === false)
+			if (users[i].isSpawned == false)
 			{
 				users[i].isSpawned = true;
 				ufo.position.x = -Math.sin((i - 1)*(3.14/2))*(arena.lengthOfBoard/2 - ufo.widthOfMiddlePart/2);
@@ -147,7 +147,7 @@ var main = function(area, customizedColors)
 			
 			// TODO: Fix the bug where users[i].bulletIsActive is undefined.
 			// console.log("User " + i + " bulletIsActive: " + users[i].bulletIsActive);
-			if (users[i].bulletIsActive === true)
+			if (users[i].bulletIsActive == true)
 			{
 				p.pushMatrix();
 				
@@ -195,13 +195,13 @@ var main = function(area, customizedColors)
 		{
 			my_session = session;
 			me = server.me();
-			me.color = my_color;
+			me.color = myColor;
 			me.variable('color').broadcast();
 			me.isSpawned = false;
 			me.variable('isSpawned').broadcast();
 			me.variable('p').whenValueChanged().then(function(event)
 			{
-				if (event.initiator !== me)
+				if (event.initiator != me)
 				{
 					ufo.position.x = me.p[0];
 					ufo.position.y = me.p[1];
@@ -214,7 +214,7 @@ var main = function(area, customizedColors)
 			me.bulletIsActive = ufo.bullet.isActive;
 			me.variable('b').whenValueChanged().then(function(event)
 			{
-				if (event.initiator !== me)
+				if (event.initiator != me)
 				{
 					ufo.bullet.position.x = me.b[0];
 					ufo.bullet.position.y = me.b[1];
@@ -223,7 +223,7 @@ var main = function(area, customizedColors)
 			});
 			me.variable('bulletIsActive').whenValueChanged().then(function(event)
 			{
-				if (event.initiator !== me)
+				if (event.initiator != me)
 				{
 					ufo.bullet.isActive = me.bulletIsActive;
 				}
@@ -235,22 +235,22 @@ var main = function(area, customizedColors)
 				if (event.initiator !== me)
 				{
 					ufo.armor--;
-					if (ufo.armor === 0)
+					if (ufo.armor == 0)
 					{
 						var livesDiv = document.getElementById("lives");
 						ufo.lives--;
-						if (ufo.lives === 0)
+						if (ufo.lives == 0)
 						{
 							livesDiv.removeChild(document.getElementById("2 life"));
 							// TODO: Eliminate this Player from the game.
 						}
 						else
 						{
-							if (ufo.lives === 2)
+							if (ufo.lives == 2)
 							{
 								livesDiv.removeChild(document.getElementById("0 life"));
 							}
-							else if (ufo.lives === 1)
+							else if (ufo.lives == 1)
 							{
 								livesDiv.removeChild(document.getElementById("1 life"));
 							}
