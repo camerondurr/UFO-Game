@@ -76,7 +76,7 @@ var main = function(area, customizedColors)
 					z: users[i].b[2]
 				};
 				
-				if (distance(ufo.position, opponentBulletPosition) < 2*(ufo.widthOfMiddlePart/2 + ufo.bullet.diameter/2))
+				if (distance(ufo.position, opponentBulletPosition) < 2*ufo.widthOfMiddlePart)
 				{
 					ufo.armor--;
 					if (ufo.armor === 0)
@@ -99,6 +99,7 @@ var main = function(area, customizedColors)
 								livesDiv.removeChild(document.getElementById("1 life"));
 							}
 							ufo.armor = 3;
+							users[i].isSpawned = false;
 						}
 					}
 					
@@ -108,6 +109,21 @@ var main = function(area, customizedColors)
 					users[i].bulletIsActive = false;
 					
 					users[i].variable('b').broadcast({skip: 10});
+				}
+				
+				var opponentPosition = {
+					x: users[i].p[0],
+					y: users[i].p[1],
+					z: users[i].p[2]
+				};
+				
+				if (distance(ufo.bullet.position, opponentPosition) < 2*ufo.widthOfMiddlePart)
+				{
+					var clangSound = new Audio("src/sounds/effects/Clang.wav");
+					clangSound.play();
+					
+					me.bulletIsActive = false;
+					ufo.bullet.isActive = false;
 				}
 			}
 		}
