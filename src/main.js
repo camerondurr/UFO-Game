@@ -130,6 +130,8 @@ var main = function(area, customizedColors)
 					
 					var clangSound = new Audio("src/sounds/effects/Clang.wav");
 					clangSound.play();
+					
+					users[i].variable('b').broadcast({skip: 10});
 				}
 				
 				var opponentPosition = {
@@ -144,6 +146,8 @@ var main = function(area, customizedColors)
 					clangSound.play();
 					
 					ufo.bullet.isActive = false;
+					
+					users[i].variable('b').broadcast({skip: 10});
 				}
 			}
 		}
@@ -271,6 +275,9 @@ var main = function(area, customizedColors)
 			
 			me.isSpawned = false;
 			me.variable('isSpawned').broadcast();
+			
+			me.arena = arena;
+			me.variable('arena').broadcast();
 			
 			me.variable('p').whenValueChanged().then(function(event)
 			{
